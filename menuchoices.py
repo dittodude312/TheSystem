@@ -77,12 +77,19 @@ def grades():
                 
 
 def test_scores():
-    def prompt():
+    def view_score(index):
+        values = []
         print(year + " " + "*"*25)
         for line in contents:
-            print(f"{(line[1] + ", " + line[0]):25}---")
+            print(f"{(line[1] + ", " + line[0]):25}---  {line[index]:>4}")
+            values.append(int(line[index]))
+        print(f"Average Score Across School: {(sum(values)/len(values)):.2f}")
+        print("*"*30)
+
 
     contents = []
+
+    # Fetch scores
     while True:
         year = input("Enter school year to view scores: ")
         try:
@@ -97,11 +104,28 @@ def test_scores():
         except Exception:
             print("An unknown error occurred. Contact admin if issue persists.")
         else: break
-
-    prompt()
-    exit()
     
-    
+    # View score category
+    while True:
+        print()
+        print("1 - Fall Standardized Testing Scores\n" \
+              "2 - Spring Standardized Testing Scores\n" \
+              "3 - SAT Scores\n" \
+              "4 - Exit")
+        
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                view_score(2)
+            case "2":
+                view_score(3)
+            case "3":
+                view_score(4)
+            case "4":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
     
 
 def x_mans():
