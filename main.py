@@ -111,4 +111,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-    #menuchoices.test_scores()
+    #menuchoices.x_mans()

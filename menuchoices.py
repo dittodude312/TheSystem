@@ -129,7 +129,34 @@ def test_scores():
     
 
 def x_mans():
-    pass
+    contents = []
+
+    # Fetch log data
+    while True:
+        try:
+            month = input("Enter the month to view X-Mans logs: ")
+            with open(f"x_mans_files/xmans{month}2026.csv") as file:
+                _ = reader(file)
+                for line in _: contents.append(line)
+                contents.remove(contents[0])
+                del _
+        except FileNotFoundError:
+            print("Files could not be found. Check if month was entered correctly. If so, contact admin if issue persists.")
+            continue
+        except Exception:
+            print("An unknown error occurred.")
+            continue
+        else: break
+
+    # Display data
+    print(month.upper() + " " + "-"*32 + "|" + "Missions  |Hours")
+    for line in contents:
+        print(f"{(line[1] + ", " + line[0] + " (" + line[2] + ")"):35} | {line[3]:>8} | {line[4]:>6}")
+    print("-"*55)
+
+    return None
+            
+
 
 def supplies():
     pass
