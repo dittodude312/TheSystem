@@ -1,4 +1,5 @@
-string = "The Cat"
+from csv import writer
 
-string = string[:string.find(" ")].capitalize() + " " + string[string.find(" ") + 1:].capitalize()
-print(string)
+with open("supplies/supplyrequests.csv", "a", newline="") as file:
+    writ = writer(file)
+    writ.writerow(["doodpool", "Erasers", "69"])

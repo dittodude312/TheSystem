@@ -61,7 +61,7 @@ def start_menu(username):
             case "3":
                 menuchoices.x_mans()
             case "4":
-                menuchoices.supplies()
+                menuchoices.supplies(username)
             case "5":
                 menuchoices.byclops()
             case "6":
@@ -109,6 +109,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
 
-    #menuchoices.x_mans()
+    menuchoices.supplies("wooverine")
