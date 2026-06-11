@@ -1,7 +1,6 @@
-from json import load
-with open("users.json", "r") as file:
-    contents = load(file)
+from os import listdir
 
-print(contents.keys())
-if 'admin' in contents.keys():
-    print('rufhe')
+print(listdir("student_grades"))
+
+names = [x[:-5] for x in listdir("student_grades")]
+print(names)

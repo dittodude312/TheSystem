@@ -2,7 +2,7 @@ import menuchoices
 import admincontrols
 
 from json import load
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def fetch_data():
     try:
@@ -83,13 +83,15 @@ def admin_panel():
     admincontrols.create_student()
 
 
-def log_user_access(username):
+def log_user_access(username, start_time):
     date = datetime.today()
     date = datetime.strftime(date, "%m/%d/%Y at %H:%M:%S")
+    uptime = datetime.now() - start_time
+    uptime -= timedelta(microseconds = uptime.microseconds)
 
     try:
         with open("userlog.txt", "a") as file:
-            file.write(f"{username} accessed The System on {date}\n")
+            file.write(f"{username} accessed The System on {date} for {uptime}\n")
     except FileNotFoundError:
         print("An error occured with logging user activity. Contacting admin. Don't go anywhere.")
         exit(1)
@@ -97,6 +99,7 @@ def log_user_access(username):
 
 
 def main():
+    start_time = datetime.now()
     print()
     username = authenticate()
     print("-"*30)
@@ -109,12 +112,12 @@ def main():
           "Terminating Session...")
     print()
 
-    log_user_access(username)
+    log_user_access(username, start_time)
    
 
 
 if __name__ == "__main__":
-    #main()
+    main()
 
     #menuchoices.grades()
-    admincontrols.create_user()
+    #admincontrols.create_user()

@@ -1,15 +1,21 @@
 from json import dump, load
 from random import choice
+from os import listdir
 
 #make it so that you can enter q on class selection to go back to category selection
 def create_student():
+    existing_names = [x[:-5] for x in listdir("student_grades")]
     schedule = []
     grades = {}
 
     # Get student name
     while True:
-        first_name = input("Enter student's first name: ").strip().capitalize()
-        last_name = input("Enter student's last name: ").strip().capitalize()
+        first_name = input("Enter student's first name: ").strip().lower().capitalize()
+        last_name = input("Enter student's last name: ").strip().lower().capitalize()
+
+        if (first_name + last_name) in existing_names:
+            print(f"Student {first_name} {last_name} is already registered in system.")
+            continue
 
         if first_name.lower() == "q" or last_name.lower() == "quit":
             return None

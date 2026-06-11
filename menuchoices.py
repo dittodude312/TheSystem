@@ -44,6 +44,7 @@ def grades():
     # Get student name
     while True:
         student = input("Enter student name: ")
+        if student.lower() == "q" or student.lower() == "quit": return None
         student = student[:student.find(" ")].capitalize() + " " + student[student.find(" ") + 1:].capitalize()
         file_name = student[:student.find(" ")] + student[student.find(" ") + 1:]
 
@@ -92,6 +93,7 @@ def test_scores():
     # Fetch scores
     while True:
         year = input("Enter school year to view scores: ")
+        if year.lower() == "q" or year.lower() == "quit": return None
         try:
             with open(f"student_testscores/testscores{year}.csv") as file:
                 _ = reader(file)
@@ -135,6 +137,7 @@ def x_mans():
     while True:
         try:
             month = input("Enter the month to view X-Mans logs: ")
+            if month.lower() == "q" or month.lower() == "quit": return None
             with open(f"x_mans_files/xmans{month}2026.csv") as file:
                 _ = reader(file)
                 for line in _: contents.append(line)
