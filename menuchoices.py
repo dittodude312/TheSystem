@@ -269,13 +269,12 @@ def supplies(username):
 
 
 def byclops():
-    pass
+    print("byclops")
+    return None
 
 def colossus_victims():
-    pass
+    print("")
 
-def admin_panel():
-    pass
 
 if __name__ == "__main__":
     print("Running menuchoices.py")

@@ -1,4 +1,5 @@
 import menuchoices
+import admincontrols
 
 from json import load
 from datetime import datetime
@@ -67,15 +68,19 @@ def start_menu(username):
             case "6":
                 menuchoices.colossus_victims()
             case "7":
-                print("Invalid input." if username != "admin" else "Initializing admin panel...")
-                if username != "admin": continue
-                else: menuchoices.admin_panel()
+                print("Invalid input." if username != "admin" else "Initializing admin panel...\n" + "."*30)
+                if username != "admin": pass
+                else: admin_panel()
             case "q":
                 return None
             case _:
                 print("Invalid input.")
         print()
         display_start_options(username)
+
+
+def admin_panel():
+    admincontrols.create_student()
 
 
 def log_user_access(username):
@@ -109,6 +114,7 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
+    main()
 
-    menuchoices.supplies("wooverine")
+    #menuchoices.grades()
+    #admincontrols.create_student()

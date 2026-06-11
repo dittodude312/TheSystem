@@ -1,0 +1,9 @@
+Arabic
+German
+Spanish
+French
+Latin
+Portuguese
+Chinese
+Japanese
+Russian

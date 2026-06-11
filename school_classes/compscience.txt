@@ -1,0 +1,13 @@
+Python
+C/C++
+C/C#
+Java
+Web Development
+Networking
+Cybersecurity
+Computer Science
+Data Science
+Machine Learning
+Computer Architecture
+Computer Hardware
+Databases
