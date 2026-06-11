@@ -1,5 +1,5 @@
-from json import dump
-
+from json import dump, load
+from random import choice
 
 #make it so that you can enter q on class selection to go back to category selection
 def create_student():
@@ -84,6 +84,53 @@ def create_student():
     with open(f"student_grades/{first_name}{last_name}.json", "w") as file:
         dump(grades, file)
     
+    return None
+
+
+def create_user():
+    # Fetch existing user data
+    try:
+        with open("users.json", "r") as file:
+            contents = load(file)
+    except FileNotFoundError:
+        print("User data file could not be found.")
+        exit(1)
+    except Exception:
+        print("An unknown error occurred.")
+        exit(1)
+
+
+    characters = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
+    password = ""
+
+    # Get new user's username
+    while True:
+        username = input("Enter new user's username: ")
+        if not username:
+            print("Username field cannot be blank.")
+        elif username in contents.keys():
+            print(f"User {username} already exists.")
+        else: break
+
+    # Create random password
+    for _ in range(4):
+        password += choice(characters)
+    print(f"User's password is:  {password}")
+
+
+    # Save new username and password
+    contents.update({username:password})
+    try:
+        with open("users.json", "w") as file:
+            dump(contents, file)
+    except FileNotFoundError:
+        print("The user data file could not be found.")
+        exit(1)
+    except Exception:
+        print("An unknown error occurred.")
+        exit(1)
+    else:
+        print(f"User {username} created successfully.")
     return None
 
 
