@@ -134,6 +134,23 @@ def create_user():
     return None
 
 
+def subjects_mananger():
+    #add/edit/remove/view classes but then also have to check if any student has the deleted class and reassign them omg
+    pass
+
+
+def approve_supply_requests():
+    #"approve" requests from that one file and delete them and move them to approved and also remove some money from budget 
+    # file and i guess add bankruptcty
+    pass
+
+def add_test_scores():
+    #add test scores or something
+    pass
+
+
+
+
 if __name__ == "__main__":
     print("Running admincontrols.py")
 else:
