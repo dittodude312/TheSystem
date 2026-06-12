@@ -55,33 +55,33 @@ def create_student():
                 case _:
                     print("Invalid selection.")
                     continue
-            break
+            
 
-        # Fetch classes belonging to class category
-        print("- "*15)
-        with open(f"school_classes/{file_path}", "r") as file:
-            classes = file.readlines()
-            classes = [x[:-1] for x in classes]
-        
+            # Fetch classes belonging to class category
+            print("- "*15)
+            with open(f"school_classes/{file_path}", "r") as file:
+                classes = file.readlines()
+                classes = [x[:-1] for x in classes]
+            
 
-        print("="*30)
-        for index, element in enumerate(classes):
-            print(f"{index + 1} - {element}")
-        print("="*30)
+            print("="*30)
+            for index, element in enumerate(classes):
+                print(f"{index + 1} - {element}")
+            print("="*30)
 
-        # Get class student will take from category
-        while True:
+            # Get class student will take from category
             hour = input("Enter the class the student will be taking: ")
-            
+                
             if hour.lower() == "q" or hour.lower() == "quit":
-                return None
-            
+                continue
+                
             if hour not in classes:
                 print("Invalid selection.")
                 continue
-            else: break
-        schedule.append(hour)
-        print()
+            else:
+                schedule.append(hour)
+                print()
+                break
 
     # Save classes and grades into new .json file
     for i in range(len(schedule)):

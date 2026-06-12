@@ -117,7 +117,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
 
     #menuchoices.grades()
-    #admincontrols.create_user()
+    admincontrols.create_student()
