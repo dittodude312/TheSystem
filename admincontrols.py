@@ -45,7 +45,6 @@ def change_key(dictionary, old_key, new_key):
     return new_dict
 
 
-
 def display_subject_categories():
     print("="*30)
     print("1 - Art/Music\n"
@@ -239,14 +238,19 @@ def subjects_mananger():
                 print("*"*30)
                 while True:
                     new_class_category = input("Enter the category the class will be put in: ")
+                    if new_class_category.lower() == "q" or new_class_category.lower() == "quit": break
                     if new_class_category not in categories:
                         print("Invalid selection.")
                         continue
                     
+                    classes = get_class_from_category(new_class_category)
                     # Enter name of new class
                     while True:   
                         new_class = input("Enter the new class: ")
                         if new_class == "q" or new_class == "quit": break
+                        if new_class in classes:
+                            print(f"{to_title_case(new_class)} already exists.")
+                            continue
                         if not new_class:
                             print("Class name cannot be empty.")
                             continue
@@ -304,6 +308,10 @@ def class_editor(category, edit_class):
               "3 - Exit")
         print("*"*30)
     
+    categories = ("Art/Music", "Computer Science", "Electives", "History", "World Language", "Math", "Reading", "Sciences")
+    file_paths = ("artmusic", "compscience", "elective", "history", "language", "math", "reading", "sciences")
+    classes = get_class_from_category(file_paths[categories.index(category)])
+
     prompt()
     while True:
         selection = input("Enter your selection: ")
@@ -313,36 +321,57 @@ def class_editor(category, edit_class):
                 while True:
                     new_name = input(f"Enter the new name of {edit_class}: ")
                     if new_name.lower() == "q" or new_name.lower() == "quit": break
+                    if new_name in classes:
+                        print(f"{to_title_case(new_name)} already exists.")
+                        continue
                     if not new_name:
                         print("Class name cannot be empty.")
                         continue
-                    else: break
+                    else:
+                        # Update classes file with new name
+                        classes.insert(classes.index(edit_class), new_name)
+                        classes.remove(edit_class)
 
-                # Get list of classes
-                with open(f"school_classes/{category}.txt", "r") as file:
-                    classes = file.readlines()
-                    classes = [x[:-1] for x in classes]
-                
-                # Update classes file with new name
-                classes.insert(classes.index(edit_class), new_name)
-                classes.remove(edit_class)
+                        classes = [x + "\n" for x in classes]
 
-                classes = [x + "\n" for x in classes]
+                        with open(f"school_classes/{file_paths[categories.index(category)]}.txt", "w") as file:
+                            file.writelines(classes)
 
-                with open(f"school_classes/{category}.txt", "w") as file:
-                    file.writelines(classes)
-
-                # Update schedule for any students with updated class name
-                for student in listdir("student_grades"):
-                    with open(f"student_grades/{student}", "r") as file:
-                        contents = load(file)
-                    
-                    if edit_class in contents.keys():
-                        contents = change_key(contents, edit_class, new_name)
-                        with open(f"student_grades/{student}", "w") as file:
-                            dump(contents, file)
+                        # Update schedule for any students with updated class name
+                        for student in listdir("student_grades"):
+                            with open(f"student_grades/{student}", "r") as file:
+                                contents = load(file)
+                            
+                            if edit_class in contents.keys():
+                                contents = change_key(contents, edit_class, new_name)
+                                with open(f"student_grades/{student}", "w") as file:
+                                    dump(contents, file)
+                        print("Class updated successfully.")
+                        break
             case "2":
-                pass
+                print("*"*30)
+                for element in categories: print(element)
+                print("*"*30)
+                while True:
+                    # Get new category for class
+                    new_category = input(f"Enter the new location for {edit_class}: ")
+                    if new_category.lower() == "q" or new_category.lower() == "quit":
+                        break
+                    if new_category not in categories:
+                        print("Invalid selection.")
+                        continue
+
+                    # Remove class from old category
+                    with open(f"school_classes/{file_paths[categories.index(category)]}.txt", "r") as file:
+                        contents = file.readlines()
+                        contents.remove(edit_class + "\n")
+                    with open(f"school_classes/{file_paths[categories.index(category)]}.txt", "w") as file:
+                        file.writelines(contents)
+
+                    # Add class to new category
+                    with open(f"school_classes/{file_paths[categories.index(new_category)]}.txt", "a") as file:
+                        file.writelines(edit_class + "\n")
+                    break
             case "3":
                 return None
             case _:
@@ -360,8 +389,6 @@ def approve_supply_requests():
 def add_test_scores():
     #add test scores or something
     pass
-
-
 
 
 if __name__ == "__main__":
