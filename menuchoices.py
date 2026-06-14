@@ -86,6 +86,7 @@ def test_scores():
             values.append(int(line[index]))
         print(f"Average Score Across School: {(sum(values)/len(values)):.2f}")
         print("*"*30)
+        input("PRESS ENTER TO CONTINUE ")
 
 
     contents = []
@@ -156,6 +157,7 @@ def x_mans():
     for line in contents:
         print(f"{(line[1] + ", " + line[0] + " (" + line[2] + ")"):35} | {line[3]:>8} | {line[4]:>6}")
     print("-"*55)
+    input("PRESS ENTER TO CONTINUE ")
 
     return None
 

@@ -2,7 +2,66 @@ from json import dump, load
 from random import choice
 from os import listdir
 
-#make it so that you can enter q on class selection to go back to category selection
+
+def to_title_case(string):
+    stop = 0
+    words = []
+    space_number = 0
+    string = string.strip()
+
+    for char in string:
+        if char == " ": space_number += 1
+    
+    string += " "
+
+    for _ in range(space_number + 1):
+        stop = string.index(" ")
+        word = string[:stop]
+
+        string = string[stop + 1:]
+        words.append(word)
+    
+    words = [x.lower().capitalize() for x in words]
+    string = ""
+
+    for element in words:
+        string += (element + " ")
+
+    return string.strip()
+
+
+def display_subject_categories():
+    print("="*30)
+    print("1 - Art/Music\n"
+          "2 - Computer Science\n"
+          "3 - Electives\n"
+          "4 - History\n"
+          "5 - World Languages\n"
+          "6 - Math\n"
+          "7 - Reading\n"
+          "8 - Sciences")
+    print("="*30)
+
+
+def display_classes(category):
+    classes = get_class_from_category(category)     
+
+    print("="*30)
+    for index, element in enumerate(classes):
+        print(f"{index + 1} - {element}")
+    print("="*30)
+
+    return classes
+
+
+def get_class_from_category(category):
+    with open(f"school_classes/{category}.txt", "r") as file:
+        classes = file.readlines()
+    classes = [x[:-1] for x in classes]
+
+    return classes
+
+
 def create_student():
     existing_names = [x[:-5] for x in listdir("student_grades")]
     schedule = []
@@ -31,26 +90,18 @@ def create_student():
         # Get category of student's class i
         print(f"Please enter student's information for Hour {i+1}.")
         while True:
-            print("="*30)
-            print("1 - Art and Music\n"
-                "2 - Computer Science\n"
-                "3 - Electives\n"
-                "4 - History\n"
-                "5 - World Languages\n"
-                "6 - Math\n"
-                "7 - Reading\n"
-                "8 - Sciences")
-            print("="*30)
+            display_subject_categories()
+
             category = input("Enter category of class the student will take: ")
             match category:
-                case "1": file_path = "artmusic.txt"
-                case "2": file_path = "compscience.txt"
-                case "3": file_path = "elective.txt"
-                case "4": file_path = "history.txt"
-                case "5": file_path = "language.txt"
-                case "6": file_path = "math.txt"
-                case "7": file_path = "reading.txt"
-                case "8": file_path = "sciences.txt"
+                case "1": file_path = "artmusic"
+                case "2": file_path = "compscience"
+                case "3": file_path = "elective"
+                case "4": file_path = "history"
+                case "5": file_path = "language"
+                case "6": file_path = "math"
+                case "7": file_path = "reading"
+                case "8": file_path = "sciences"
                 case "q" | "quit": return None
                 case _:
                     print("Invalid selection.")
@@ -58,16 +109,7 @@ def create_student():
             
 
             # Fetch classes belonging to class category
-            print("- "*15)
-            with open(f"school_classes/{file_path}", "r") as file:
-                classes = file.readlines()
-                classes = [x[:-1] for x in classes]
-            
-
-            print("="*30)
-            for index, element in enumerate(classes):
-                print(f"{index + 1} - {element}")
-            print("="*30)
+            classes = display_classes(file_path)
 
             # Get class student will take from category
             hour = input("Enter the class the student will be taking: ")
@@ -89,6 +131,7 @@ def create_student():
 
     with open(f"student_grades/{first_name}{last_name}.json", "w") as file:
         dump(grades, file)
+        print("Student created successfully.")
     
     return None
 
@@ -142,8 +185,69 @@ def create_user():
 
 def subjects_mananger():
     #add/edit/remove/view classes but then also have to check if any student has the deleted class and reassign them omg
-    pass
+    def prompt():
+        print("*"*30)
+        print("1 - View classes\n" \
+              "2 - Add class\n" \
+              "3 - Edit class\n" \
+              "4 - Remove class\n" \
+              "5 - Exit")
+        print("*"*30)
 
+    def register_class(category, class_name):
+        with open(f"school_classes/{category}.txt", "a") as file:
+            file.write(class_name + "\n")
+    
+
+    categories = ("Art/Music", "Computer Science", "Electives", "History", "World Language", "Math", "Reading", "Sciences")
+    file_paths = ("artmusic", "compscience", "elective", "history", "language", "math", "reading", "sciences")
+
+    prompt()
+
+    while True:
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                print()
+                for i in range(len(categories)):
+                    print(f"{categories[i].upper()} - ")
+                    classes = get_class_from_category(file_paths[i])
+                    for element in classes:
+                        print(f"\t- {element}")    
+            case "2":
+                print("*"*30)
+                for element in categories: print(element)
+                print("*"*30)
+                while True:
+                    new_class_category = input("Enter the category the class will be put in: ")
+                    if new_class_category not in categories:
+                        print("Invalid selection.")
+                        continue
+
+                    while True:   
+                        new_class = input("Enter the new class: ")
+                        if new_class == "q" or new_class == "quit":
+                            break
+                        if not new_class:
+                            print("Class name cannot be empty.")
+                            continue
+                        
+                        new_class = to_title_case(new_class)
+                        register_class(file_paths[categories.index(new_class_category)], new_class)
+                        break
+                    break
+            case "3":
+                pass
+            case "4":
+                pass
+            case "5":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
+                
 
 def approve_supply_requests():
     #"approve" requests from that one file and delete them and move them to approved and also remove some money from budget 

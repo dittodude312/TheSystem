@@ -48,6 +48,15 @@ def display_start_options(username):
     return None
 
 
+def display_admin_options():
+    print("*"*30)
+    print("1 - Add student\n" \
+          "2 - Create new user")
+    print("*"*30)
+
+    return None
+
+
 def start_menu(username):
     display_start_options(username)
 
@@ -80,7 +89,25 @@ def start_menu(username):
 
 
 def admin_panel():
-    admincontrols.create_student()
+    display_admin_options()
+
+    while True:
+        selection = input("Enter your selection: ")
+
+        match selection:
+            case "1":
+                admincontrols.create_student()
+                input("PRESS ENTER TO CONTINUE")
+            case "2":
+                admincontrols.create_user()
+            case "q" | "quit":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        display_admin_options()
+            
 
 
 def log_user_access(username, start_time):
@@ -120,4 +147,4 @@ if __name__ == "__main__":
     #main()
 
     #menuchoices.grades()
-    admincontrols.create_student()
+    admincontrols.subjects_mananger()
