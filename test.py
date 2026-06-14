@@ -24,17 +24,16 @@ string = string.strip()
 
 print(string + "|")"""
 
-string = "the cat sat on the mat"
-string = string.strip()
-stop = 0
-words = []
+diction = {"a":1, "b":2, "c":3}
+new_dict = {}
+keys = list(diction.keys())
+values = list(diction.values())
+old = "b"
+new = "bee"
+keys.insert(keys.index(old), new)
+keys.remove(old)
 
-while True:
-    try:
-        stop = string.index(" ")
-        word = string[:stop]
-        string = string[stop + 1:]
-        words.append(word)
-    except ValueError:
-        break
-    
+for i in range(len(keys)):
+    new_dict.update({keys[i]:values[i]})
+
+print(new_dict)

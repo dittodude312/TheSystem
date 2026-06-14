@@ -30,6 +30,22 @@ def to_title_case(string):
     return string.strip()
 
 
+def change_key(dictionary, old_key, new_key):
+    new_dict = {}
+
+    keys = list(dictionary.keys())
+    values = list(dictionary.values())
+
+    keys.insert(keys.index(old_key), new_key)
+    keys.remove(old_key)
+
+    for i in range(len(keys)):
+        new_dict.update({keys[i]:values[i]})
+    
+    return new_dict
+
+
+
 def display_subject_categories():
     print("="*30)
     print("1 - Art/Music\n"
@@ -208,13 +224,16 @@ def subjects_mananger():
         selection = input("Enter your selection: ")
         match selection:
             case "1":
+                # Display all classes by categories
                 print()
                 for i in range(len(categories)):
                     print(f"{categories[i].upper()} - ")
                     classes = get_class_from_category(file_paths[i])
                     for element in classes:
-                        print(f"\t- {element}")    
+                        print(f"\t- {element}")  
+                input("PRESS ENTER TO CONTINUE ")  
             case "2":
+                # Get category to put class in
                 print("*"*30)
                 for element in categories: print(element)
                 print("*"*30)
@@ -223,21 +242,49 @@ def subjects_mananger():
                     if new_class_category not in categories:
                         print("Invalid selection.")
                         continue
-
+                    
+                    # Enter name of new class
                     while True:   
                         new_class = input("Enter the new class: ")
-                        if new_class == "q" or new_class == "quit":
-                            break
+                        if new_class == "q" or new_class == "quit": break
                         if not new_class:
                             print("Class name cannot be empty.")
                             continue
                         
+                        # Format and save new class
                         new_class = to_title_case(new_class)
                         register_class(file_paths[categories.index(new_class_category)], new_class)
                         break
                     break
             case "3":
-                pass
+                # Get category of class to be changed
+                print("*"*30)
+                for element in categories: print(element)
+                print("*"*30)
+                while True:
+                    class_category = input("Enter the category of the class to edit: ")
+                    if class_category == "q" or class_category == "quit": break
+                    if class_category not in categories:
+                        print("Invalid selection.")
+                        continue
+                    
+                    # Get class to change
+                    while True:
+                        classes = get_class_from_category(file_paths[categories.index(class_category)])
+                        print("*"*30)
+                        for element in classes: print(element)
+                        print("*"*30)
+
+                        edit_class = input("Enter the class to edit: ")
+                        if edit_class == "q" or edit_class == "quit": break
+                        if edit_class not in classes:
+                            print("Invalid selection.")
+                            continue
+                        else:
+                            # Change class
+                            class_editor(class_category, edit_class)
+                            break
+                    break
             case "4":
                 pass
             case "5":
@@ -247,7 +294,63 @@ def subjects_mananger():
                 continue
         print()
         prompt()
+
+
+def class_editor(category, edit_class):
+    def prompt():
+        print("*"*30)
+        print("1 - Rename class\n" \
+              "2 - Move class to different category\n" \
+              "3 - Exit")
+        print("*"*30)
+    
+    prompt()
+    while True:
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                # Get new name of class
+                while True:
+                    new_name = input(f"Enter the new name of {edit_class}: ")
+                    if new_name.lower() == "q" or new_name.lower() == "quit": break
+                    if not new_name:
+                        print("Class name cannot be empty.")
+                        continue
+                    else: break
+
+                # Get list of classes
+                with open(f"school_classes/{category}.txt", "r") as file:
+                    classes = file.readlines()
+                    classes = [x[:-1] for x in classes]
                 
+                # Update classes file with new name
+                classes.insert(classes.index(edit_class), new_name)
+                classes.remove(edit_class)
+
+                classes = [x + "\n" for x in classes]
+
+                with open(f"school_classes/{category}.txt", "w") as file:
+                    file.writelines(classes)
+
+                # Update schedule for any students with updated class name
+                for student in listdir("student_grades"):
+                    with open(f"student_grades/{student}", "r") as file:
+                        contents = load(file)
+                    
+                    if edit_class in contents.keys():
+                        contents = change_key(contents, edit_class, new_name)
+                        with open(f"student_grades/{student}", "w") as file:
+                            dump(contents, file)
+            case "2":
+                pass
+            case "3":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
+
 
 def approve_supply_requests():
     #"approve" requests from that one file and delete them and move them to approved and also remove some money from budget 

@@ -1,7 +1,7 @@
 Algebra I
 Algebra II
 Pre-Calculus
-Calculus
+Calculus I
 Linear Algebra
 Statistics
 Discrete Math

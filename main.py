@@ -51,7 +51,9 @@ def display_start_options(username):
 def display_admin_options():
     print("*"*30)
     print("1 - Add student\n" \
-          "2 - Create new user")
+          "2 - Create new user\n" \
+          "3 - Subjects Manager\n" \
+          "4 - Exit")
     print("*"*30)
 
     return None
@@ -100,7 +102,9 @@ def admin_panel():
                 input("PRESS ENTER TO CONTINUE")
             case "2":
                 admincontrols.create_user()
-            case "q" | "quit":
+            case "3":
+                admincontrols.subjects_mananger()
+            case "4":
                 return None
             case _:
                 print("Invalid selection.")
@@ -144,7 +148,7 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
+    main()
 
     #menuchoices.grades()
-    admincontrols.subjects_mananger()
+    #admincontrols.subjects_mananger()
