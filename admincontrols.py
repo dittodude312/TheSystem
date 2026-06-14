@@ -290,7 +290,35 @@ def subjects_mananger():
                             break
                     break
             case "4":
-                pass
+                print("*"*30)
+                for element in categories: print(element)
+                print("*"*30)
+                while True:
+                    remove_category = input("Enter the category of the class to remove: ")
+                    if remove_category.lower() == "q" or remove_category.lower() == "quit":
+                        break
+                    if remove_category not in categories:
+                        print("Invalid selection.")
+                        continue
+
+                    classes = get_class_from_category(file_paths[categories.index(remove_category)])
+
+                    print("*"*30)
+                    for element in classes: print(element)
+                    print("*"*30)
+
+                    remove_class = input("Enter class to remove: ")
+                    if remove_class.lower() == "q" or remove_class.lower() == "quit":
+                        break
+                    if remove_class not in classes:
+                        print("Invalid selection.")
+                        continue
+                    else:
+                        classes.remove(remove_class)
+                        classes = [x + "\n" for x in classes]
+                        with open(f"school_classes/{file_paths[categories.index(remove_category)]}.txt", "w") as file:
+                            file.writelines(classes)
+                        break
             case "5":
                 return None
             case _:
