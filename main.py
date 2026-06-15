@@ -99,7 +99,6 @@ def admin_panel():
         match selection:
             case "1":
                 admincontrols.create_student()
-                input("PRESS ENTER TO CONTINUE")
             case "2":
                 admincontrols.create_user()
             case "3":
@@ -112,7 +111,6 @@ def admin_panel():
         print()
         display_admin_options()
             
-
 
 def log_user_access(username, start_time):
     date = datetime.today()
@@ -148,7 +146,7 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
+    main()
 
     #menuchoices.grades()
-    admincontrols.subjects_mananger()
+    #admincontrols.subjects_mananger()

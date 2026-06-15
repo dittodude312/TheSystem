@@ -1,48 +1,8 @@
+from utilfunctions import *
+
 from json import dump, load
 from random import choice
 from os import listdir
-
-
-def to_title_case(string):
-    stop = 0
-    words = []
-    space_number = 0
-    string = string.strip()
-
-    for char in string:
-        if char == " ": space_number += 1
-    
-    string += " "
-
-    for _ in range(space_number + 1):
-        stop = string.index(" ")
-        word = string[:stop]
-
-        string = string[stop + 1:]
-        words.append(word)
-    
-    words = [x.lower().capitalize() for x in words]
-    string = ""
-
-    for element in words:
-        string += (element + " ")
-
-    return string.strip()
-
-
-def change_key(dictionary, old_key, new_key):
-    new_dict = {}
-
-    keys = list(dictionary.keys())
-    values = list(dictionary.values())
-
-    keys.insert(keys.index(old_key), new_key)
-    keys.remove(old_key)
-
-    for i in range(len(keys)):
-        new_dict.update({keys[i]:values[i]})
-    
-    return new_dict
 
 
 def display_subject_categories():
@@ -243,7 +203,7 @@ def subjects_mananger():
                         print("Invalid selection.")
                         continue
                     
-                    classes = get_class_from_category(new_class_category)
+                    classes = get_class_from_category(file_paths[categories.index(new_class_category)])
                     # Enter name of new class
                     while True:   
                         new_class = input("Enter the new class: ")
@@ -399,6 +359,8 @@ def class_editor(category, edit_class):
                     # Add class to new category
                     with open(f"school_classes/{file_paths[categories.index(new_category)]}.txt", "a") as file:
                         file.writelines(edit_class + "\n")
+                    
+                    category = new_category
                     break
             case "3":
                 return None

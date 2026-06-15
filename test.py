@@ -1,39 +1,40 @@
-"""string = " onCe uPOn a tiME  "
-stop = 0
-words = []
-string = string.strip()
+def to_title_case(string, seperator = " "):
+    stop = 0
+    words = []
+    space_number = 0
+    string = string.strip()
 
-num = 0
-for char in string:
-    if char == " ":
-        num += 1
-string += " "
+    for char in string:
+        if char == seperator: space_number += 1
+    
+    string += seperator
 
-for i in range(num + 1):
-    stop = string.index(" ")
-    word = string[:stop]
-    string = string[stop + 1:]
-    words.append(word)
-words = [x.lower().capitalize() for x in words]
-string = ""
-for thing in words:
-    string += (thing + " ")
+    for _ in range(space_number + 1):
+        try:
+            stop = string.index(seperator)
+        except ValueError: pass
 
-string = string.strip()
+        word = string[:stop]
+
+        string = string[stop + 1:]
+        #print("word: " + word)
+        #print("string: " + string)
+        words.append(word)
+    
+    words = [x.lower().capitalize() for x in words]
+    for x in words:
+        words[words.index(x)] = x.upper() if "." in x else x
+    for element in words:
+        if element.lower() == "ii" or element.lower() == "iii":
+            words[words.index(element)] = element.upper()
+    #print(words)
+    string = ""
+
+    for element in words:
+        string += (element + seperator)
+
+    return string[:-1]
 
 
-print(string + "|")"""
-
-diction = {"a":1, "b":2, "c":3}
-new_dict = {}
-keys = list(diction.keys())
-values = list(diction.values())
-old = "b"
-new = "bee"
-keys.insert(keys.index(old), new)
-keys.remove(old)
-
-for i in range(len(keys)):
-    new_dict.update({keys[i]:values[i]})
-
-print(new_dict)
+string = "e.L.A. ii"
+print(to_title_case(string))
