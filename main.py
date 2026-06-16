@@ -146,7 +146,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
 
-    #menuchoices.grades()
-    #admincontrols.subjects_mananger()
+    #menuchoices.x_mans()
+    admincontrols.approve_supply_requests()

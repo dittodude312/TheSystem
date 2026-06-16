@@ -1,6 +1,7 @@
 from utilfunctions import *
 
 from json import dump, load
+from csv import reader, writer
 from random import choice
 from os import listdir
 
@@ -372,9 +373,105 @@ def class_editor(category, edit_class):
 
 
 def approve_supply_requests():
-    #"approve" requests from that one file and delete them and move them to approved and also remove some money from budget 
-    # file and i guess add bankruptcty
-    pass
+    requests = []
+    items = []
+    costs = []
+    with open("schoolbudget.txt", "r") as file: budget = float(file.read())
+
+    # Display current budget
+    print(f"The current school budget is: ${budget:,.2f}")
+    input("PRESS ENTER TO CONTINUE ")
+    print()
+    
+    # Fetch and display all requests
+    with open("supplies/supplyrequests.csv", "r") as file:
+        _ = reader(file)
+        requests = [x for x in _]
+        requests = list(enumerate(requests[1:]))
+
+    print("   |Username       |Supply              |Quantity")
+    print("---+---------------+--------------------+-----------")
+    for index, line in requests: 
+        print(f"{index + 1:3}|{line[0]:15}|{line[1]:20}|{line[2]:>11}")
+
+    # Get valid request to approve
+    while True:
+        try:
+            approve = input("Enter the request number to approve: ")
+
+            if approve.lower() == "q" or approve.lower() == "quit":
+                return None
+            
+            approve = int(approve)
+
+            if approve <= 0 or approve > len(requests):
+                print("Invalid input.")
+                continue
+            else:
+                request = requests[approve - 1][1]
+                print(f"The request is: {request[2]} {request[1]} from {request[0]}.")
+                confirm = input("Are you sure you want to approve the supply request: ")
+                if confirm.lower() == "y" or confirm.lower() == "yes":
+                    break
+                else: continue
+        except ValueError:
+            print("Invalid input.")
+            continue
+
+    # Get list of items and their costs
+    with open("supplycosts.csv", "r") as file:
+        _ = reader(file)
+        for line in _: 
+            items.append(line[0])
+            costs.append(line[1])
+        items.remove(items[0])
+        costs.remove(costs[0])
+
+    # Get price of the order
+    if request[1] in items:
+        order_cost = float(costs[items.index(request[1])])
+        order_cost *= int(request[2])
+    else:
+        print("Request is custom made. Price could not be found.")
+        while True:
+            try:
+                order_cost = float(input("Enter the cost of the order: "))
+            except ValueError:
+                print("Invalid input")
+                continue
+            else: break
+    
+    # Bankruptcy check
+    budget -= order_cost
+    if budget < 0:
+        print("Insufficient funds to complete the order. Cancelling approval...")
+        return None
+
+    print()
+    print(f"The cost of the order will be: {order_cost:,.2f}")
+    print(f"The remaining money in budget is {budget}")
+
+    # Update budget
+    with open("schoolbudget.txt", "w") as file:
+        file.write(f"{budget:.2f}")
+    
+    # Update requests
+    requests = [x[1] for x in requests]
+    requests.remove(request)
+    with open("supplies/supplyrequests.csv", "w", newline="") as file:
+        _ = writer(file)
+        _.writerow(["Username", "Supply", "Quantity"])
+        _.writerows(requests)
+    
+    # Add order to orders file
+    request.append(f"{order_cost:.2f}")
+    with open("supplies/supplyorders.csv", "a", newline="") as file:
+        _ = writer(file)
+        _.writerow(request)
+
+    print("\nOrder placed successfully.")
+    return None
+
 
 def add_test_scores():
     #add test scores or something

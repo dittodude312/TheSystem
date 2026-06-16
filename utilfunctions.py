@@ -3,6 +3,7 @@ def to_title_case(string):
     words = []
     space_number = 0
     string = string.strip()
+    string = string[:-1] if string[len(string) - 1] == "." else string
 
     for char in string:
         if char == " ": space_number += 1
@@ -20,7 +21,9 @@ def to_title_case(string):
     for element in words:
         if element.lower() == "ii" or element.lower() == "iii":
             words[words.index(element)] = element.upper()
+    for element in words:
         words[words.index(element)] = element.upper() if "." in element else element
+    for element in words:
         words[words.index(element)] = element.upper() if "/" in element else element
     string = ""
 
