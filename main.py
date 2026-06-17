@@ -53,7 +53,10 @@ def display_admin_options():
     print("1 - Add student\n" \
           "2 - Create new user\n" \
           "3 - Subjects Manager\n" \
-          "4 - Exit")
+          "4 - Approve supply requests\n" \
+          "5 - Add test scores\n" \
+          "6 - View logs\n"
+          "7 - Exit")
     print("*"*30)
 
     return None
@@ -104,6 +107,12 @@ def admin_panel():
             case "3":
                 admincontrols.subjects_mananger()
             case "4":
+                admincontrols.approve_supply_requests()
+            case "5":
+                admincontrols.add_test_scores()
+            case "6":
+                admincontrols.userlog()
+            case "7":
                 return None
             case _:
                 print("Invalid selection.")
@@ -146,7 +155,7 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
+    main()
 
     #menuchoices.x_mans()
-    admincontrols.add_test_scores()
+    #admincontrols.userlog()

@@ -576,6 +576,93 @@ def add_test_scores():
         prompt()
 
 
+def userlog():
+    def prompt():
+        print("*"*30)
+        print("1 - View user log\n"
+              "2 - View log by day\n"
+              "3 - Clear user log\n"
+              "4 - Exit")
+        print("*"*30)
+
+    def fetch_data():
+        with open("userlog.txt", "r") as file:
+            contents = file.readlines()
+            contents = [x[:-1] for x in contents]
+            
+        return contents
+    
+    def display_logs(log_data):
+        if not log_data:
+            print("NO LOGS TO DISPLAY")
+            return None
+        
+        for index, line in enumerate(log_data):
+            print(f"[{index + 1}] {line}")
+        input("PRESS ENTER TO CONTINUE ")
+        return None
+    
+    prompt()
+    
+    while True:
+        selection = input("Enter your selection: ")
+
+        match selection:
+            case "1":
+                print()
+                display_logs(fetch_data())
+            case "2":
+                logs = fetch_data()
+                while True:
+                    date = input("Enter the date (m/d): ")
+                    if date.lower() == "q" or date.lower() == "quit": break
+                    try:
+                        day = date[date.index("/") + 1:]
+                        month = date[:date.index("/")]
+                    except ValueError:
+                        print("Invalid input.")
+                        continue
+                    if not day.isdigit() or not month.isdigit():
+                        print("Invalid input.")
+                        continue
+                    if int(day) > 31 or int(month) > 12 or int(day) <= 0 or int(month) <= 0:
+                        print("Invalid input.")
+                        continue
+                
+                    logs = list(filter(lambda x: f"{month:>02}/{day:>02}/" in x, logs))
+
+                    print()
+                    display_logs(logs)
+                    break
+            case "3":
+                print("THIS WILL CLEAR ALL LOG HISTORY")
+                confirm = input("Are you sure you want to clear ALL log history: ")
+                if confirm.lower() == "y" or confirm.lower() == "yes":
+                    with open("users.json", "r") as file:
+                        contents = load(file)
+                        admin_password = contents["admin"]
+                    
+                    password = input("Enter admin password to proceed: ")
+
+                    if password != admin_password:
+                        print("Incorrect password.")
+                    else:
+                        with open("userlog.txt", "w") as file:
+                            file.write("")
+                        
+                        print()
+                        print("User log has been cleared.")
+                        input("PRESS ENTER TO CONTINUE ")
+            case "4":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+
+        print()
+        prompt()
+
+
 
 if __name__ == "__main__":
     print("Running admincontrols.py")
