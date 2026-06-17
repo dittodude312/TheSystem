@@ -149,4 +149,4 @@ if __name__ == "__main__":
     #main()
 
     #menuchoices.x_mans()
-    admincontrols.approve_supply_requests()
+    admincontrols.add_test_scores()

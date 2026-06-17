@@ -1,5 +1,5 @@
 from csv import writer
 
-with open("tests.csv", "a",newline="") as file:
-    wr = writer(file)
-    wr.writerow(["z",109])
+with open("student_testscores/testscores2026.csv", "a", newline = "") as file:
+    thing = writer(file)
+    thing.writerow(["a", "b", 90,90,1200])

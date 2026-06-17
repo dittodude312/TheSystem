@@ -474,8 +474,107 @@ def approve_supply_requests():
 
 
 def add_test_scores():
-    #add test scores or something
-    pass
+    def prompt():
+        print("*"*30)
+        print("1 - Add student score\n"
+              "2 - Create new year entry\n"
+              "3 - Exit")
+        print("*"*30)
+
+
+    def valid_score(prompt, max):
+        while True:
+            try:
+                score = int(input(prompt))
+
+                if score <= 0 or score > max:
+                    print("Score out of range.")
+                    continue
+                else: break
+
+            except ValueError:
+                print("Invalid input.")
+                continue
+        return score            
+
+
+    def add_score():
+        students = [x[:-5] for x in listdir("student_grades")]
+        existing_students = []
+
+        while True:
+            year = input("Enter the year: ")
+            if year.lower() == "q" or year.lower() == "quit":
+                return None
+
+            try:
+                with open(f"student_testscores/testscores{year}.csv", "r") as file:
+                    _ = reader(file)
+                    for line in _: existing_students.append(line[0] + line[1])
+                    existing_students.remove(existing_students[0])
+            except FileNotFoundError:
+                print("Could not find test score entry for that year. Check if that year exists or was entered correctly.")
+                continue
+            else: break
+        
+        while True:
+            student_name = input("Enter the name of the student: ")
+            if student_name.lower() == "q" or student_name.lower() == "quit":
+                return None
+            
+            if not student_name:
+                print("Field cannot be empty.")
+                continue
+
+            student_name = to_title_case(student_name)
+            try:
+                compare = student_name[:student_name.index(" ")] + student_name[student_name.index(" ") + 1:]
+            except ValueError:
+                print("Student does not exist. Check if name was spelled correctly.")
+                continue
+            if compare not in students:
+                print("Student does not exist. Check if name was spelled correctly.")
+                continue
+            if compare in existing_students:
+                print("Student already has a test score entry.")
+                continue
+            break
+
+        print()
+        fallscore = valid_score("Enter student's Fall Score: ", 100)
+        springscore = valid_score("Enter student's Spring Score: ", 100)
+        satscore = valid_score("Enter the student's SAT Score: ", 1600)
+        
+        print()
+        print(f"Score entry will be [{student_name.replace(" ", ",")},{fallscore},{springscore},{satscore}]")
+
+        confirm = input("Is the information correct: ")
+        if confirm.lower() == "y" or confirm.lower() == "yes":
+            with open(f"student_testscores/testscores{year}.csv", "a", newline="") as file:
+                _ = writer(file)
+                _.writerow([student_name[:student_name.index(" ")], student_name[student_name.index(" ") + 1:], fallscore, springscore, satscore])
+            print("Score added successfully.")
+            return None
+        else: return None
+
+
+    prompt()
+
+    while True:
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                add_score()
+            case "2":
+                pass
+            case "3":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
+
 
 
 if __name__ == "__main__":
