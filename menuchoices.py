@@ -278,7 +278,20 @@ def byclops():
     return None
 
 def colossus_victims():
-    print("")
+    contents = []
+    with open("colossus_victims/victims.csv", "r") as file:
+        _ = reader(file)
+        for line in _: contents.append(line)
+        contents.remove(contents[0])
+    
+    print("First Name     |Last Name      |Date       |Description")
+    print("---------------+---------------+-----------+-------------------------------------")
+    for line in contents:
+        print(f"{line[0]:15}|{line[1]:15}|{line[2]} | {line[3]}")
+    print("---------------+---------------+-----------+-------------------------------------")
+
+    input("PRESS ENTER TO CONTINUE ")
+
 
 
 if __name__ == "__main__":

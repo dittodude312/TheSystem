@@ -155,7 +155,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
 
-    #menuchoices.x_mans()
+    menuchoices.colossus_victims()
     #admincontrols.userlog()
