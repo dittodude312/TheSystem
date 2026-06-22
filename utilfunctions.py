@@ -46,3 +46,7 @@ def change_key(dictionary, old_key, new_key):
         new_dict.update({keys[i]:values[i]})
     
     return new_dict
+
+
+if __name__ == "__main__":
+    print("Running utilfunctions.py")

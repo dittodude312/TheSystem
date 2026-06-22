@@ -1,5 +1,6 @@
 import menuchoices
 import admincontrols
+import subjects
 
 from json import load
 from datetime import datetime, timedelta
@@ -48,20 +49,6 @@ def display_start_options(username):
     return None
 
 
-def display_admin_options():
-    print("*"*30)
-    print("1 - Add student\n" \
-          "2 - Create new user\n" \
-          "3 - Subjects Manager\n" \
-          "4 - Approve supply requests\n" \
-          "5 - Add test scores\n" \
-          "6 - View logs\n"
-          "7 - Exit")
-    print("*"*30)
-
-    return None
-
-
 def start_menu(username):
     display_start_options(username)
 
@@ -94,8 +81,18 @@ def start_menu(username):
 
 
 def admin_panel():
-    display_admin_options()
-
+    def prompt():
+        print("*"*30)
+        print("1 - Add student\n" \
+              "2 - Create new user\n" \
+              "3 - Subjects Manager\n" \
+              "4 - Approve supply requests\n" \
+              "5 - Add test scores\n" \
+              "6 - View logs\n"
+              "7 - Exit")
+        print("*"*30)
+    
+    prompt()
     while True:
         selection = input("Enter your selection: ")
 
@@ -105,7 +102,7 @@ def admin_panel():
             case "2":
                 admincontrols.create_user()
             case "3":
-                admincontrols.subjects_mananger()
+                subjects.main()
             case "4":
                 admincontrols.approve_supply_requests()
             case "5":
@@ -118,7 +115,7 @@ def admin_panel():
                 print("Invalid selection.")
                 continue
         print()
-        display_admin_options()
+        prompt()
             
 
 def log_user_access(username, start_time):
@@ -153,9 +150,8 @@ def main():
     log_user_access(username, start_time)
    
 
-
 if __name__ == "__main__":
-    #main()
+    main()
 
-    menuchoices.colossus_victims()
+    #menuchoices.colossus_victims()
     #admincontrols.userlog()

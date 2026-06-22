@@ -1,13 +1,6 @@
-Biology
-Chemistry
-Physics
-Biochemistry
-Biophysics
-Anatomy
-Environmental
-Quantum Mechanics
-Meteorology
-Astronomy
-Cosmology
-Ecology
-Gardening
+Welding
+Wood Tech
+Jewelry
+Auto Tech
+Cooking
+Research

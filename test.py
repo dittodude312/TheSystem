@@ -1,5 +1,7 @@
-from csv import reader
+from json import load
 
-with open("colossus_victims/victims.csv", "r") as file:
-    thing = reader(file)
-    for line in thing:print(line)
+with open("student_grades/BillyBob.json", "r") as file:
+    contents = load(file)
+    print(contents.keys())
+    if "Chinese" in contents.keys():
+        print('evkje')

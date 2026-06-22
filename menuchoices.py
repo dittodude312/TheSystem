@@ -277,6 +277,7 @@ def byclops():
     print("byclops")
     return None
 
+
 def colossus_victims():
     contents = []
     with open("colossus_victims/victims.csv", "r") as file:
@@ -284,6 +285,7 @@ def colossus_victims():
         for line in _: contents.append(line)
         contents.remove(contents[0])
     
+    print()
     print("First Name     |Last Name      |Date       |Description")
     print("---------------+---------------+-----------+-------------------------------------")
     for line in contents:
@@ -293,8 +295,5 @@ def colossus_victims():
     input("PRESS ENTER TO CONTINUE ")
 
 
-
 if __name__ == "__main__":
     print("Running menuchoices.py")
-else:
-    print("\nSystem functions loaded successfully.\n" + "~"*35)

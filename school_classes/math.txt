@@ -1,9 +1,10 @@
 Algebra I
 Algebra II
-Pre- Calculus
+Precalculus
 Calculus I
 Linear Algebra
 Statistics
 Discrete Math
 Geometry
 Number & Set Theory
+Calculus II
