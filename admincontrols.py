@@ -313,6 +313,10 @@ def add_test_scores():
                 print("Field cannot be empty.")
                 continue
 
+            if len(student_name.strip().split(" ")) != 2:
+                print("Must include both first and last name.")
+                continue
+
             student_name = to_title_case(student_name)
             try:
                 compare = student_name[:student_name.index(" ")] + student_name[student_name.index(" ") + 1:]
@@ -345,6 +349,34 @@ def add_test_scores():
         else: return None
 
 
+    def add_entry():
+        while True:
+            existing_years = [x[-8:-4] for x in listdir("student_testscores")]
+            year = input("Enter the year: ")
+
+            if year.lower() == "q" or year.lower() == "quit":
+                return None
+            
+            if year in existing_years:
+                print("An entry already exists for that year.")
+                continue
+
+            if not year.isdigit() or len(year) != 4:
+                print("Invalid input.")
+                continue
+
+            if int(year) > 2100 or int(year) < 2000:
+                print("Year out of range.")
+                continue
+
+            with open(f"student_testscores/testscores{year}.csv", "w", newline="") as file:
+                _ = writer(file)
+                _.writerow(["FirstName","Lastname","FallScore","SpringScore","SATScore"])
+
+            print("Entry created successfully.")
+            return None
+
+
     prompt()
 
     while True:
@@ -353,7 +385,7 @@ def add_test_scores():
             case "1":
                 add_score()
             case "2":
-                pass
+                add_entry()
             case "3":
                 return None
             case _:

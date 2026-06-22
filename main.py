@@ -154,4 +154,4 @@ if __name__ == "__main__":
     main()
 
     #menuchoices.colossus_victims()
-    #admincontrols.userlog()
+    #admincontrols.add_test_scores()
