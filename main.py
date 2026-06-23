@@ -94,8 +94,9 @@ def admin_panel():
               "3 - Subjects Manager\n" \
               "4 - Approve supply requests\n" \
               "5 - Add test scores\n" \
-              "6 - View logs\n"
-              "7 - Exit")
+              "6 - View logs\n" \
+              "7 - View students\n"
+              "8 - Exit")
         print("*"*30)
     
     prompt()
@@ -104,7 +105,7 @@ def admin_panel():
 
         match selection:
             case "1":
-                admincontrols.create_student()
+                admincontrols.new_student()
             case "2":
                 admincontrols.create_user()
             case "3":
@@ -116,6 +117,8 @@ def admin_panel():
             case "6":
                 admincontrols.userlog()
             case "7":
+                admincontrols.view_students()
+            case "8":
                 return None
             case _:
                 print("Invalid selection.")
@@ -157,7 +160,7 @@ def main():
    
 
 if __name__ == "__main__":
-    main()
+    #main()
 
     #menuchoices.colossus_victims()
-    #subjects.main()
+    subjects.main()

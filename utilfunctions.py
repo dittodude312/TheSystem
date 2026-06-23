@@ -1,3 +1,20 @@
+CATEGORIES = {"Art & Music":"artmusic", "Computer Science":"compscience", "Electives":"elective", 
+              "History":"history", "World Languages":"language", "Math":"math", "Reading":"reading",
+              "Sciences":"sciences"}
+
+
+def display_categories():
+    print("*"*30)
+    for element in CATEGORIES.keys(): print(element)
+    print("*"*30)
+
+
+def get_class_from_category(category_path):
+    with open(f"school_classes/{category_path}.txt", "r") as file:
+        classes = [x[:-1] for x in file.readlines()]
+    return classes
+
+
 def to_title_case(string):
     stop = 0
     words = []
@@ -46,6 +63,9 @@ def change_key(dictionary, old_key, new_key):
         new_dict.update({keys[i]:values[i]})
     
     return new_dict
+
+
+
 
 
 if __name__ == "__main__":

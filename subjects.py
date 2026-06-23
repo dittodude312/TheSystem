@@ -3,23 +3,6 @@ from utilfunctions import *
 from os import listdir
 from json import load
 
-CATEGORIES = {"Art & Music":"artmusic", "Computer Science":"compscience", "Electives":"elective", 
-              "History":"history", "World Languages":"language", "Math":"math", "Reading":"reading",
-              "Sciences":"sciences"}
-
-
-def get_class_from_category(category_path):
-    with open(f"school_classes/{category_path}.txt", "r") as file:
-        classes = [x[:-1] for x in file.readlines()]
-    return classes
-
-
-def display_categories():
-    print("*"*30)
-    for element in CATEGORIES.keys(): print(element)
-    print("*"*30)
-
-
 def view_classes():
     for category in CATEGORIES.keys():
         print(category.upper())
@@ -64,7 +47,7 @@ def add_class():
                 continue
             
             # Save new class
-            with open(f"school_classes/{CATEGORIES[category]}.txt", "a") as file:
+            with open(f"school_classes/{CATEGORIES[category]}.txt", "a", newline="") as file:
                 file.write(new_class + "\n") 
             print("Class registered successfully.")
             return None
@@ -224,7 +207,7 @@ def move_class():
                     contents.remove(relocate_class + "\n")
                     file.writelines(contents)
 
-                with open(f"school_classes/{CATEGORIES[new_category]}.txt", "a") as file:
+                with open(f"school_classes/{CATEGORIES[new_category]}.txt", "a", newline="") as file:
                     file.write(relocate_class + "\n")
                 
                 print("Class moved successfully.")

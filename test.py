@@ -1,2 +1,5 @@
-with open("backup.txt", "a") as file:
-    file.write("hello there")
+from csv import writer
+
+with open("students.csv", 'a', newline="") as file:
+    w = writer(file)
+    w.writerow(["e", "e", 12])

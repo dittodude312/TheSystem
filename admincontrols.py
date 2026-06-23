@@ -6,21 +6,8 @@ from random import choice
 from os import listdir
 
 
-def display_subject_categories():
-    print("="*30)
-    print("1 - Art & Music\n"
-          "2 - Computer Science\n"
-          "3 - Electives\n"
-          "4 - History\n"
-          "5 - World Languages\n"
-          "6 - Math\n"
-          "7 - Reading\n"
-          "8 - Sciences")
-    print("="*30)
-
-
 def display_classes(category):
-    classes = get_class_from_category(category)     
+    classes = get_class_from_category(CATEGORIES[category])     
 
     print("="*30)
     for index, element in enumerate(classes):
@@ -30,85 +17,96 @@ def display_classes(category):
     return classes
 
 
-def get_class_from_category(category):
-    with open(f"school_classes/{category}.txt", "r") as file:
-        classes = file.readlines()
-    classes = [x[:-1] for x in classes]
+def new_student():
+    def add_hour():
+        display_categories()
+        while True:
+            category = input("Enter the category of the class: ")
 
-    return classes
+            if category.lower() == "q" or category.lower() == "quit":
+                confirm = input("Are you sure you want to cancel: ")
+                if confirm == "y" or confirm == "yes": return None
+                else: continue
 
+            if category not in CATEGORIES.keys():
+                print("Category does not exist.")
+                continue
+            
+            print()
+            classes = get_class_from_category(CATEGORIES[category])
+            print("*"*30)
+            for element in classes: print(element)
+            print("*"*30)
+            while True:
+                subject = input("Enter the class name: ")
 
-def create_student():
-    existing_names = [x[:-5] for x in listdir("student_grades")]
+                if subject.lower() == "q" or subject.lower() == "quit":
+                    display_categories()
+                    break
+                
+                if subject not in classes:
+                    print("Class does not exist.")
+                    continue
+
+                return subject
+    
+    existing_students = []
+    with open("students.csv", "r") as file:
+        _ = reader(file)
+        for line in _: existing_students.append(line[:-1])
+        existing_students.remove(existing_students[0])
+    
     schedule = []
     grades = {}
 
-    # Get student name
     while True:
-        first_name = input("Enter student's first name: ").strip().lower().capitalize()
-        last_name = input("Enter student's last name: ").strip().lower().capitalize()
+        first_name = input("Enter the student's first name: ").lower().capitalize()
+        if first_name.lower() == "q" or first_name.lower() == "quit": return None
+        last_name = input("Enter the student's last name: ").lower().capitalize()
+        if last_name.lower() == "q" or last_name.lower() == "quit": return None
+        grade = input("Enter the student's grade level: ")
+        if grade.lower() == "q" or grade.lower() == "quit": return None
 
-        if (first_name + last_name) in existing_names:
-            print(f"Student {first_name} {last_name} is already registered in system.")
+        if [first_name, last_name] in existing_students:
+            print(f"{first_name} {last_name} is already registered.")
             continue
-
-        if first_name.lower() == "q" or last_name.lower() == "quit":
-            return None
 
         if not first_name or not last_name:
             print("Neither fields can be empty.")
             continue
-        else: break
-    
-    print()
+
+        if grade not in ("9", "10", "11", "12"):
+            print("Invalid grade entry. Must be between 9 and 12.")
+            continue
+        break
 
     for i in range(6):
-        # Get category of student's class i
-        print(f"Please enter student's information for Hour {i+1}.")
-        while True:
-            display_subject_categories()
+        print(f"Enter the class the student will have for hour {i + 1}.")
+        subject = add_hour()
+        
+        if subject is None: return None
+        else: schedule.append(subject)
+        
+        print()
+    
+    print("="*30)
+    print(f"{first_name} {last_name}")
+    print(f"\tGrade {grade}")
+    for index, element in enumerate(schedule):
+        print(f"{index + 1}. {element}")
+    print("="*30)
 
-            category = input("Enter category of class the student will take: ")
-            match category:
-                case "1": file_path = "artmusic"
-                case "2": file_path = "compscience"
-                case "3": file_path = "elective"
-                case "4": file_path = "history"
-                case "5": file_path = "language"
-                case "6": file_path = "math"
-                case "7": file_path = "reading"
-                case "8": file_path = "sciences"
-                case "q" | "quit": return None
-                case _:
-                    print("Invalid selection.")
-                    continue
-            
-
-            # Fetch classes belonging to class category
-            classes = display_classes(file_path)
-
-            # Get class student will take from category
-            hour = input("Enter the class the student will be taking: ")
-                
-            if hour.lower() == "q" or hour.lower() == "quit":
-                continue
-                
-            if hour not in classes:
-                print("Invalid selection.")
-                continue
-            else:
-                schedule.append(hour)
-                print()
-                break
-
-    # Save classes and grades into new .json file
-    for i in range(len(schedule)):
-        grades.update({schedule[i]:"A"})
+    for element in schedule: grades.update({element:"A"})
 
     with open(f"student_grades/{first_name}{last_name}.json", "w") as file:
         dump(grades, file)
-        print("Student created successfully.")
     
+    with open("students.csv", "a", newline="") as file:
+        _ = writer(file)
+        _.writerow([first_name, last_name, grade])
+
+    print("Student registered successfully.")
+
     return None
 
 
@@ -482,5 +480,22 @@ def userlog():
         prompt()
 
 
+def view_students():
+    contents = []
+    with open("students.csv", "r") as file:
+        _ = reader(file)
+        for line in _: contents.append(line)
+        contents.remove(contents[0])
+
+    print()
+    print("First Name   |Last Name    |Grade    \n" \
+          "-------------+-------------+---------")
+    for line in contents:
+        print(f"{line[0]:13}|{line[1]:13}|{line[2]:>8}")
+
+    input("PRESS ENTER TO CONTINUE ")
+
+
 if __name__ == "__main__":
+    #add hour/misson logging for normal users and approval for admin panel.
     print("Running admincontrols.py")
