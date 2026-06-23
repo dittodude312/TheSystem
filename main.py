@@ -43,7 +43,11 @@ def display_start_options(username):
           "4 - Supplies\n" \
           "5 - Byclops\n" \
           "6 - Colosssus Victims")
-    print("7 - Admin Panel" if username == "admin" else "", end="\n" if username == "admin" else "")
+    if username == "admin":
+        print("7 - Admin Panel\n" \
+              "8 - Exit")
+    else:
+        print("7 - Exit")
     print("*"*30)
 
     return None
@@ -69,11 +73,13 @@ def start_menu(username):
             case "6":
                 menuchoices.colossus_victims()
             case "7":
-                print("Invalid input." if username != "admin" else "Initializing admin panel...\n" + "."*30)
-                if username != "admin": pass
-                else: admin_panel()
-            case "q":
-                return None
+                if username == "admin":
+                    print("Initializing admin panel...")
+                    admin_panel()
+                else: return None
+            case "8":
+                if username == "admin": return None
+                else: print("Invalid input.")
             case _:
                 print("Invalid input.")
         print()
@@ -154,4 +160,4 @@ if __name__ == "__main__":
     main()
 
     #menuchoices.colossus_victims()
-    #admincontrols.add_test_scores()
+    #subjects.main()

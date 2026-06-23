@@ -1,3 +1,2 @@
-string = "de "
-
-print(string.strip().split(" "))
+with open("backup.txt", "a") as file:
+    file.write("hello there")

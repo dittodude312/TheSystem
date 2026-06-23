@@ -171,6 +171,66 @@ def rename_class():
                 return None
 
 
+def move_class():
+    display_categories()
+
+    while True:
+        category = input("Enter the category of the class to move: ")
+        if category.lower() == "q" or category.lower() == "quit":
+            return None
+        
+        if category not in CATEGORIES.keys():
+            print("Category doesn't exist.")
+            continue
+        
+        classes = get_class_from_category(CATEGORIES[category])
+        print("*"*30)
+        for element in classes: print(element)
+        print("*"*30)
+        while True:
+            relocate_class = input("Enter the class name: ")
+            
+            if relocate_class.lower() == "q" or relocate_class.lower() == "quit":
+                display_categories()
+                break
+
+            if relocate_class not in classes:
+                print("Class doesn't exist.")
+                continue
+
+            while True:
+                new_category = input("Enter the new category: ")
+
+                if new_category.lower() == "q" or new_category.lower() == "quit":
+                    print("*"*30)
+                    for element in classes: print(element)
+                    print("*"*30)
+                    break
+
+                if new_category not in CATEGORIES.keys():
+                    print("Category doesn't exist.")
+                    continue
+
+                if new_category == category:
+                    print("Invalid input.")
+                    continue
+
+                if relocate_class in get_class_from_category(CATEGORIES[new_category]):
+                    print("The class is already in the category.")
+                    continue
+                
+                with open(f"school_classes/{CATEGORIES[category]}.txt", "r+") as file:
+                    contents = file.readlines()
+                    contents.remove(relocate_class + "\n")
+                    file.writelines(contents)
+
+                with open(f"school_classes/{CATEGORIES[new_category]}.txt", "a") as file:
+                    file.write(relocate_class + "\n")
+                
+                print("Class moved successfully.")
+                return None
+
+
 def main():
     def prompt():
         print("*"*30)
@@ -196,7 +256,7 @@ def main():
             case "3":
                 rename_class()
             case "4":
-                pass
+                move_class()
             case "5":
                 remove_class()
             case "6":
