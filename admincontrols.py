@@ -20,6 +20,7 @@ def display_classes(category):
 def new_student():
     def add_hour():
         display_categories()
+        # Get category for class
         while True:
             category = input("Enter the category of the class: ")
 
@@ -37,6 +38,7 @@ def new_student():
             print("*"*30)
             for element in classes: print(element)
             print("*"*30)
+            # Get class name
             while True:
                 subject = input("Enter the class name: ")
 
@@ -50,6 +52,7 @@ def new_student():
 
                 return subject
     
+    # Fetch existing students
     existing_students = []
     with open("students.csv", "r") as file:
         _ = reader(file)
@@ -59,6 +62,7 @@ def new_student():
     schedule = []
     grades = {}
 
+    # Get basic student information
     while True:
         first_name = input("Enter the student's first name: ").lower().capitalize()
         if first_name.lower() == "q" or first_name.lower() == "quit": return None
@@ -79,7 +83,8 @@ def new_student():
             print("Invalid grade entry. Must be between 9 and 12.")
             continue
         break
-
+    
+    # Create schedule
     for i in range(6):
         print(f"Enter the class the student will have for hour {i + 1}.")
         subject = add_hour()
@@ -89,6 +94,7 @@ def new_student():
         
         print()
     
+    # Display information
     print("="*30)
     print(f"{first_name} {last_name}")
     print(f"\tGrade {grade}")
@@ -96,6 +102,7 @@ def new_student():
         print(f"{index + 1}. {element}")
     print("="*30)
 
+    # Format grades and save student information
     for element in schedule: grades.update({element:"A"})
 
     with open(f"student_grades/{first_name}{last_name}.json", "w") as file:
@@ -161,7 +168,7 @@ def approve_supply_requests():
     requests = []
     items = []
     costs = []
-    with open("schoolbudget.txt", "r") as file: budget = float(file.read())
+    with open("references/schoolbudget.txt", "r") as file: budget = float(file.read())
 
     # Display current budget
     print(f"The current school budget is: ${budget:,.2f}")
@@ -204,7 +211,7 @@ def approve_supply_requests():
             continue
 
     # Get list of items and their costs
-    with open("supplycosts.csv", "r") as file:
+    with open("references/supplycosts.csv", "r") as file:
         _ = reader(file)
         for line in _: 
             items.append(line[0])
@@ -237,7 +244,7 @@ def approve_supply_requests():
     print(f"The remaining money in budget is {budget}")
 
     # Update budget
-    with open("schoolbudget.txt", "w") as file:
+    with open("references/schoolbudget.txt", "w") as file:
         file.write(f"{budget:.2f}")
     
     # Update requests
@@ -288,10 +295,12 @@ def add_test_scores():
         existing_students = []
 
         while True:
+            # Get year for text scores
             year = input("Enter the year: ")
             if year.lower() == "q" or year.lower() == "quit":
                 return None
 
+            # Get students who already have a score for the year
             try:
                 with open(f"student_testscores/testscores{year}.csv", "r") as file:
                     _ = reader(file)
@@ -302,6 +311,7 @@ def add_test_scores():
                 continue
             else: break
         
+        # Get name of student
         while True:
             student_name = input("Enter the name of the student: ")
             if student_name.lower() == "q" or student_name.lower() == "quit":
@@ -314,7 +324,7 @@ def add_test_scores():
             if len(student_name.strip().split(" ")) != 2:
                 print("Must include both first and last name.")
                 continue
-
+            
             student_name = to_title_case(student_name)
             try:
                 compare = student_name[:student_name.index(" ")] + student_name[student_name.index(" ") + 1:]
@@ -328,7 +338,8 @@ def add_test_scores():
                 print("Student already has a test score entry.")
                 continue
             break
-
+        
+        # Get each score
         print()
         fallscore = valid_score("Enter student's Fall Score: ", 100)
         springscore = valid_score("Enter student's Spring Score: ", 100)
@@ -336,8 +347,9 @@ def add_test_scores():
         
         print()
         print(f"Score entry will be [{student_name.replace(" ", ",")},{fallscore},{springscore},{satscore}]")
-
         confirm = input("Is the information correct: ")
+
+        # Save scores
         if confirm.lower() == "y" or confirm.lower() == "yes":
             with open(f"student_testscores/testscores{year}.csv", "a", newline="") as file:
                 _ = writer(file)
@@ -430,6 +442,7 @@ def userlog():
                 display_logs(fetch_data())
             case "2":
                 logs = fetch_data()
+                # Get date
                 while True:
                     date = input("Enter the date (m/d): ")
                     if date.lower() == "q" or date.lower() == "quit": break
@@ -452,6 +465,7 @@ def userlog():
                     display_logs(logs)
                     break
             case "3":
+                # Confirm delete
                 print("THIS WILL CLEAR ALL LOG HISTORY")
                 confirm = input("Are you sure you want to clear ALL log history: ")
                 if confirm.lower() == "y" or confirm.lower() == "yes":
@@ -459,6 +473,7 @@ def userlog():
                         contents = load(file)
                         admin_password = contents["admin"]
                     
+                    # Confirm password
                     password = input("Enter admin password to proceed: ")
 
                     if password != admin_password:
@@ -481,12 +496,14 @@ def userlog():
 
 
 def view_students():
+    # Fetch data
     contents = []
-    with open("students.csv", "r") as file:
+    with open("references/students.csv", "r") as file:
         _ = reader(file)
         for line in _: contents.append(line)
         contents.remove(contents[0])
 
+    # Display data
     print()
     print("First Name   |Last Name    |Grade    \n" \
           "-------------+-------------+---------")

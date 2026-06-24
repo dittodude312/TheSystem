@@ -3,6 +3,7 @@ from utilfunctions import *
 from os import listdir
 from json import load
 
+
 def view_classes():
     for category in CATEGORIES.keys():
         print(category.upper())
@@ -106,6 +107,7 @@ def remove_class():
 def rename_class():
     display_categories()
 
+    # Get class category
     while True:
         category = input("Enter the category of the class to rename: ")
 
@@ -120,6 +122,7 @@ def rename_class():
         print("*"*30)
         for element in classes: print(element)
         print("*"*30)
+        # Get old name
         while True:
             old_name = input("Enter the class name: ")
 
@@ -130,7 +133,8 @@ def rename_class():
             if old_name not in classes:
                 print("Class does not exist.")
                 continue
-
+            
+            # Get new name
             while True:
                 new_name = input("Enter the class's new name: ")
 
@@ -143,7 +147,8 @@ def rename_class():
                 if new_name in classes:
                     print("Name already in use.")
                     continue
-
+                
+                # Save new name
                 classes.insert(classes.index(old_name), new_name)
                 classes.remove(old_name)
                 classes = [x + "\n" for x in classes]
@@ -157,6 +162,7 @@ def rename_class():
 def move_class():
     display_categories()
 
+    # Get class category
     while True:
         category = input("Enter the category of the class to move: ")
         if category.lower() == "q" or category.lower() == "quit":
@@ -170,6 +176,7 @@ def move_class():
         print("*"*30)
         for element in classes: print(element)
         print("*"*30)
+        # Get class name
         while True:
             relocate_class = input("Enter the class name: ")
             
@@ -180,7 +187,8 @@ def move_class():
             if relocate_class not in classes:
                 print("Class doesn't exist.")
                 continue
-
+            
+            # Get new category
             while True:
                 new_category = input("Enter the new category: ")
 
@@ -202,11 +210,13 @@ def move_class():
                     print("The class is already in the category.")
                     continue
                 
+                # Remove class from old category
                 with open(f"school_classes/{CATEGORIES[category]}.txt", "r+") as file:
                     contents = file.readlines()
                     contents.remove(relocate_class + "\n")
                     file.writelines(contents)
 
+                # Add class to new category
                 with open(f"school_classes/{CATEGORIES[new_category]}.txt", "a", newline="") as file:
                     file.write(relocate_class + "\n")
                 

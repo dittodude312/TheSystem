@@ -1,3 +1,7 @@
+# TODO: add choosing years for making hours request, userlog viewing, and x mans logs
+# TODO: games?
+# TODO: password changing
+
 import menuchoices
 import admincontrols
 import subjects
@@ -5,9 +9,10 @@ import subjects
 from json import load
 from datetime import datetime, timedelta
 
+
 def fetch_data():
     try:
-        with open("users.json", "r") as file:
+        with open("references/users.json", "r") as file:
             contents = load(file)
     except FileNotFoundError:
         print("Failed to fetch user data. Terminating Session.")
@@ -44,12 +49,13 @@ def start_menu(username):
               "4 - Supplies\n" \
               "5 - Byclops\n" \
               "6 - Colosssus Victims\n"
-              "7 - Log Missions")
+              "7 - Log Missions\n"
+              "8 - Change password")
         if username == "admin":
-            print("8 - Admin Panel\n" \
-                  "9 - Exit")
+            print("9 - Admin Panel\n" \
+                  "10 - Exit")
         else:
-            print("8 - Exit")
+            print("9 - Exit")
         print("*"*30)
 
         return None
@@ -165,4 +171,4 @@ if __name__ == "__main__":
     main()
 
     #menuchoices.log_missions()
-    #subjects.main()
+    #subjects.main() 

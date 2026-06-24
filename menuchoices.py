@@ -298,6 +298,7 @@ def colossus_victims():
 
 def log_missions(username):
     months = [x[-11:-8] for x in listdir("x_mans_files/mission_logs")]
+    # Get month
     while True:
         month = input("Enter the month to log mission: ").capitalize()
         
@@ -309,6 +310,7 @@ def log_missions(username):
             continue
         
         print()
+        # Get amount of hours
         while True:
             try:
                 hours = int(input("Enter the hours you want to log for this mission: "))
@@ -319,11 +321,17 @@ def log_missions(username):
                 print("Invalid input.")
                 continue
             else:
+                # Save request
                 with open("x_mans_files/requests/hour_requests.csv", "a", newline="") as file:
                     _ = writer(file)
                     _.writerow([username, hours, month])
                 print("Mission requested successfully. Admin will review it for approval to be logged.")
                 return None
+
+
+def change_password():
+    pass
+
 
 
 if __name__ == "__main__":
