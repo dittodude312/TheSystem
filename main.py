@@ -1,6 +1,5 @@
 # TODO: add choosing years for making hours request, userlog viewing, and x mans logs
 # TODO: games?
-# TODO: password changing
 
 import menuchoices
 import admincontrols
@@ -81,11 +80,13 @@ def start_menu(username):
             case "7":
                 menuchoices.log_missions(username)
             case "8":
+                menuchoices.change_password(username)
+            case "9":
                 if username == "admin":
                     print("Initializing admin panel...")
                     admin_panel()
                 else: return None
-            case "9":
+            case "10":
                 if username == "admin": return None
                 else: print("Invalid input.")
             case _:

@@ -329,9 +329,49 @@ def log_missions(username):
                 return None
 
 
-def change_password():
-    pass
+def change_password(username):
+    # Fetch data
+    with open("references/users.json", "r") as file:
+        contents = load(file)
+    
+    # Get old password
+    print("Enter your current password to proceed.")
+    while True:
+        old_password = input("Password: ")
+        if old_password.lower() == "q" or old_password.lower() == "quit":
+            return None
 
+        if old_password != contents[username]:
+            print("Password incorrect.")
+            continue
+        else: break
+
+    # Get new password
+    print()
+    while True:
+        new_password = input("Enter your new password: ")
+        if new_password.lower() == "q" or new_password.lower() == "quit":
+            return None
+
+        if not new_password:
+            print("Field cannot be empty.")
+            continue
+
+        if new_password == old_password:
+            print("New password cannot be the same as old password.")
+            continue
+        
+        print()
+        if input("Confirm password: ") == new_password: break
+    
+    # Save new password
+    contents.update({username:new_password})
+
+    with open("references/users.json", "w") as file:
+        dump(contents, file)
+    
+    print("\nPassword updated.")
+    input("PRESS ENTER TO CONTINUE ")
 
 
 if __name__ == "__main__":
