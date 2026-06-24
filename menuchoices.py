@@ -1,5 +1,6 @@
 from json import load, dump
 from csv import reader, writer
+from os import listdir
 
 
 def input_check(prompt, acceptable_values):
@@ -139,7 +140,7 @@ def x_mans():
         try:
             month = input("Enter the month to view X-Mans logs: ")
             if month.lower() == "q" or month.lower() == "quit": return None
-            with open(f"x_mans_files/xmans{month}2026.csv") as file:
+            with open(f"x_mans_files/mission_logs/xmans{month}2026.csv") as file:
                 _ = reader(file)
                 for line in _: contents.append(line)
                 contents.remove(contents[0])
@@ -293,6 +294,36 @@ def colossus_victims():
     print("---------------+---------------+-----------+-------------------------------------")
 
     input("PRESS ENTER TO CONTINUE ")
+
+
+def log_missions(username):
+    months = [x[-11:-8] for x in listdir("x_mans_files/mission_logs")]
+    while True:
+        month = input("Enter the month to log mission: ").capitalize()
+        
+        if month.lower() == "q" or month.lower() == "quit":
+            return None
+        
+        if month not in months:
+            print("Month does not have a log.")
+            continue
+        
+        print()
+        while True:
+            try:
+                hours = int(input("Enter the hours you want to log for this mission: "))
+                if hours > 24 or hours < 0:
+                    print("Value out of range.")
+                    continue
+            except ValueError:
+                print("Invalid input.")
+                continue
+            else:
+                with open("x_mans_files/requests/hour_requests.csv", "a", newline="") as file:
+                    _ = writer(file)
+                    _.writerow([username, hours, month])
+                print("Mission requested successfully. Admin will review it for approval to be logged.")
+                return None
 
 
 if __name__ == "__main__":

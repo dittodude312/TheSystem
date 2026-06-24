@@ -35,26 +35,26 @@ def authenticate():
         else: print("Incorrect username or password.\n")
 
 
-def display_start_options(username):
-    print("*"*30)
-    print("1 - Grades\n" \
-          "2 - Test Scores\n"
-          "3 - X-Mans\n" \
-          "4 - Supplies\n" \
-          "5 - Byclops\n" \
-          "6 - Colosssus Victims")
-    if username == "admin":
-        print("7 - Admin Panel\n" \
-              "8 - Exit")
-    else:
-        print("7 - Exit")
-    print("*"*30)
-
-    return None
-
-
 def start_menu(username):
-    display_start_options(username)
+    def prompt():
+        print("*"*30)
+        print("1 - Grades\n" \
+              "2 - Test Scores\n"
+              "3 - X-Mans\n" \
+              "4 - Supplies\n" \
+              "5 - Byclops\n" \
+              "6 - Colosssus Victims\n"
+              "7 - Log Missions")
+        if username == "admin":
+            print("8 - Admin Panel\n" \
+                  "9 - Exit")
+        else:
+            print("8 - Exit")
+        print("*"*30)
+
+        return None
+
+    prompt()
 
     while True:
         selection = input("Enter your selection: ")
@@ -73,17 +73,19 @@ def start_menu(username):
             case "6":
                 menuchoices.colossus_victims()
             case "7":
+                menuchoices.log_missions(username)
+            case "8":
                 if username == "admin":
                     print("Initializing admin panel...")
                     admin_panel()
                 else: return None
-            case "8":
+            case "9":
                 if username == "admin": return None
                 else: print("Invalid input.")
             case _:
                 print("Invalid input.")
         print()
-        display_start_options(username)
+        prompt()
 
 
 def admin_panel():
@@ -160,7 +162,7 @@ def main():
    
 
 if __name__ == "__main__":
-    #main()
+    main()
 
-    #menuchoices.colossus_victims()
-    subjects.main()
+    #menuchoices.log_missions()
+    #subjects.main()

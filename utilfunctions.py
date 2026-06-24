@@ -65,8 +65,5 @@ def change_key(dictionary, old_key, new_key):
     return new_dict
 
 
-
-
-
 if __name__ == "__main__":
     print("Running utilfunctions.py")
