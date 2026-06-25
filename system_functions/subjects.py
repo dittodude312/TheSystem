@@ -1,4 +1,4 @@
-from utilfunctions import *
+from .utilfunctions import *
 
 from os import listdir
 from json import load

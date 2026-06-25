@@ -1,4 +1,4 @@
-from utilfunctions import *
+from .utilfunctions import *
 
 from json import dump, load
 from csv import reader, writer
@@ -54,7 +54,7 @@ def new_student():
     
     # Fetch existing students
     existing_students = []
-    with open("students.csv", "r") as file:
+    with open("references/students.csv", "r") as file:
         _ = reader(file)
         for line in _: existing_students.append(line[:-1])
         existing_students.remove(existing_students[0])
@@ -108,7 +108,7 @@ def new_student():
     with open(f"student_grades/{first_name}{last_name}.json", "w") as file:
         dump(grades, file)
     
-    with open("students.csv", "a", newline="") as file:
+    with open("references/students.csv", "a", newline="") as file:
         _ = writer(file)
         _.writerow([first_name, last_name, grade])
 

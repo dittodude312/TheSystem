@@ -5,10 +5,8 @@
 # TODO: fault tolerance thing
 # TODO: optimize stuff ig
 
-import menuchoices
-import admincontrols
-import subjects
 
+from system_functions import *
 from json import load
 from datetime import datetime, timedelta
 
@@ -174,6 +172,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
     #menuchoices.x_mans()
     #subjects.main() 
