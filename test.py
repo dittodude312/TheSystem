@@ -1,5 +1,3 @@
-try:
-    input("erferhfieurf: ")
-except KeyboardInterrupt:
-    print("nu-uh")
-finally: exit()
+import menuchoices
+
+print(menuchoices.listdir("supplies"))

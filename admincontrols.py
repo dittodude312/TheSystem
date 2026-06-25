@@ -211,7 +211,7 @@ def approve_supply_requests():
             continue
 
     # Get list of items and their costs
-    with open("references/supplycosts.csv", "r") as file:
+    with open("supplies/supplycosts.csv", "r") as file:
         _ = reader(file)
         for line in _: 
             items.append(line[0])

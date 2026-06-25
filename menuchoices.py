@@ -133,34 +133,95 @@ def test_scores():
     
 
 def x_mans():
-    contents = []
+    def prompt():
+        print("*"*30)
+        print("1 - View mission logs\n" \
+              "2 - View X-Mans\n" \
+              "3 - View X-Man profile\n" \
+              "4 - Exit")
+        print("*"*30)
+    
+    
+    def fetch_x_mans():
+        contents = []
+        with open("x_mans_files/x_men_list.csv", "r") as file:
+            _ = reader(file)
+            for line in _: contents.append(line)
+            contents.remove(contents[0])
+        return contents
 
-    # Fetch log data
+
+    def view_mission_logs():
+        contents = []
+
+        # Fetch log data
+        while True:
+            try:
+                month = input("Enter the month to view X-Mans logs: ")
+                if month.lower() == "q" or month.lower() == "quit": return None
+                with open(f"x_mans_files/mission_logs/xmans{month}2026.csv") as file:
+                    _ = reader(file)
+                    for line in _: contents.append(line)
+                    contents.remove(contents[0])
+                    del _
+            except FileNotFoundError:
+                print("Files could not be found. Check if month was entered correctly. If so, contact admin if issue persists.")
+                continue
+            except Exception:
+                print("An unknown error occurred.")
+                continue
+            else: break
+
+        # Display data
+        print(month.upper() + " " + "-"*32 + "|" + "Missions  |Hours")
+        for line in contents:
+            print(f"{(line[1] + ", " + line[0] + " (" + line[2] + ")"):35} | {line[3]:>8} | {line[4]:>6}")
+        print("-"*55)
+        input("PRESS ENTER TO CONTINUE ")
+
+    
+    def view_x_mans():
+        contents = fetch_x_mans()
+
+        print("First Name     |Last Name      |Nickname        ")
+        print("---------------+---------------+----------------")
+        for line in contents:
+            print(f"{line[0]:15}|{line[1]:15}|{line[2]:15}")
+        
+        input("PRESS ENTER TO CONTINUE ")
+
+    
+    def view_profile():
+        contents = fetch_x_mans()
+
+        for index, line in enumerate(contents):
+            print(f"[{index + 1}] {line[2]} ({line[1]}, {line[0]})")
+
+        while True:
+            choice = input("Enter number to view profile: ")
+            raise NotImplementedError("idk what to put ngl")
+        
+
+    prompt()
+
     while True:
-        try:
-            month = input("Enter the month to view X-Mans logs: ")
-            if month.lower() == "q" or month.lower() == "quit": return None
-            with open(f"x_mans_files/mission_logs/xmans{month}2026.csv") as file:
-                _ = reader(file)
-                for line in _: contents.append(line)
-                contents.remove(contents[0])
-                del _
-        except FileNotFoundError:
-            print("Files could not be found. Check if month was entered correctly. If so, contact admin if issue persists.")
-            continue
-        except Exception:
-            print("An unknown error occurred.")
-            continue
-        else: break
-
-    # Display data
-    print(month.upper() + " " + "-"*32 + "|" + "Missions  |Hours")
-    for line in contents:
-        print(f"{(line[1] + ", " + line[0] + " (" + line[2] + ")"):35} | {line[3]:>8} | {line[4]:>6}")
-    print("-"*55)
-    input("PRESS ENTER TO CONTINUE ")
-
-    return None
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                print()
+                view_mission_logs()
+            case "2":
+                print()
+                view_x_mans()
+            case "3":
+                view_profile()
+            case "4":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
 
 
 def supplies(username):

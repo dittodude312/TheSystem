@@ -1,5 +1,9 @@
-# TODO: add choosing years for making hours request, userlog viewing, and x mans logs
+# TODO: add choosing years for making hours request, userlog viewing, and x mans logs/requests
 # TODO: games?
+# TODO: notifications (would have to go back to like 6 different functions)
+# TODO: x mans profiles
+# TODO: fault tolerance thing
+# TODO: optimize stuff ig
 
 import menuchoices
 import admincontrols
@@ -171,5 +175,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-    #menuchoices.log_missions()
+    #menuchoices.x_mans()
     #subjects.main() 
