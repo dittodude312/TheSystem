@@ -513,6 +513,94 @@ def view_students():
     input("PRESS ENTER TO CONTINUE ")
 
 
+def approve_hours():
+    requests = []
+    # Fetch all requests
+    with open("x_mans_files/requests/hour_requests.csv", "r") as file:
+        _ = reader(file)
+        for line in _: requests.append(line)
+        requests.remove(requests[0])
+
+    # Display requests
+    if not requests:
+        print("NO HOUR REQUESTS TO REVIEW")
+        input("PRESS ENTER TO CONTINUE ")
+        return None
+    else:
+        for index, line in enumerate(requests):
+            print(f"[{index + 1}] {line[0]} {line[1]} hour(s) for {line[2]}")
+
+    # Get request to approve
+    while True:
+        try:
+            selection = input("Enter request number to approve: ")
+
+            if selection.lower() == "q" or selection.lower() == "quit":
+                return None
+
+            selection = int(selection)
+            if selection not in range(1, len(requests) + 1):
+                print("Invalid selection")
+                continue
+        except ValueError:
+            print("Invalid selection.")
+            continue
+        else: break
+    # Remove approved request from requests file
+    to_approve = requests[selection - 1]
+    requests.remove(to_approve)
+    requests.insert(0, ["Username", "HoursRequested", "MissionMonth"])
+    with open("x_mans_files/requests/hour_requests.csv", "w", newline="") as file:
+        _ = writer(file)
+        _.writerows(requests)
+
+    # Map username attached to request to name
+    contents = []
+    requestor = []
+    with open("x_mans_files/x_men_list.csv", "r") as file:
+        _ = reader(file)
+        for line in _: contents.append(line)
+        contents.remove(contents[0])
+    
+    for person in contents:
+        if person[3] == to_approve[0]:
+            requestor = person[:-1]
+
+    # Get month entry for requestor
+    month_entries = []
+    mission_report = []
+    with open(f"x_mans_files/mission_logs/xmans{to_approve[2]}2026.csv") as file:
+        _ = reader(file)
+        for line in _: month_entries.append(line)
+        month_entries.remove(month_entries[0])
+    
+    for entry in month_entries:
+        if requestor[0] == entry[0]:
+            mission_report = entry
+    
+
+    # Update mission report
+    hours = int(mission_report[4]) + int(to_approve[1])
+    mission_count = int(mission_report[3]) + 1
+
+    upd_mission_report = [mission_report[0], mission_report[1], mission_report[2], mission_count, hours]
+
+    # Save updated mission report
+    month_entries.insert(month_entries.index(mission_report), upd_mission_report)
+    month_entries.remove(mission_report)
+    month_entries.insert(0, ["FirstName","LastName","Nickname","MissionCount","HoursLogged"])
+    with open(f"x_mans_files/mission_logs/xmans{to_approve[2]}2026.csv", "w", newline="") as file:
+        _ = writer(file)
+        _.writerows(month_entries)
+    
+    print("Hours updated successfully.")
+
+
+    
+
+    
+
+
 if __name__ == "__main__":
     #add hour/misson logging for normal users and approval for admin panel.
     print("Running admincontrols.py")

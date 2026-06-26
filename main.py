@@ -4,6 +4,8 @@
 # TODO: x mans profiles
 # TODO: fault tolerance thing
 # TODO: optimize stuff ig
+# TODO: fix add user function
+# TODO: add function to create month entries
 
 
 from system_functions import *
@@ -18,6 +20,7 @@ def fetch_data():
     except FileNotFoundError:
         print("Failed to fetch user data. Terminating Session.")
         print("If issue persists, please contact admin.")
+        print("Tip - Make sure you are using TheSystem directory when executing main.py.")
         exit(1)
     else:
         return contents 
@@ -106,8 +109,9 @@ def admin_panel():
               "4 - Approve supply requests\n" \
               "5 - Add test scores\n" \
               "6 - View logs\n" \
-              "7 - View students\n"
-              "8 - Exit")
+              "7 - View students\n" \
+              "8 - Approve mission hours\n" \
+              "9 - Exit")
         print("*"*30)
     
     prompt()
@@ -130,6 +134,8 @@ def admin_panel():
             case "7":
                 admincontrols.view_students()
             case "8":
+                admincontrols.approve_hours()
+            case "9":
                 return None
             case _:
                 print("Invalid selection.")
@@ -173,6 +179,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-
     #menuchoices.x_mans()
-    #subjects.main() 
+    #admincontrols.approve_hours() 
