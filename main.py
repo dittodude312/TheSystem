@@ -4,7 +4,6 @@
 # TODO: x mans profiles
 # TODO: fault tolerance thing
 # TODO: optimize stuff ig
-# TODO: fix add user function
 # TODO: add function to create month entries
 
 
@@ -122,7 +121,7 @@ def admin_panel():
             case "1":
                 admincontrols.new_student()
             case "2":
-                admincontrols.create_user()
+                admincontrols.new_user()
             case "3":
                 subjects.main()
             case "4":
@@ -180,4 +179,4 @@ if __name__ == "__main__":
     main()
 
     #menuchoices.x_mans()
-    #admincontrols.approve_hours() 
+    #admincontrols.new_user() 

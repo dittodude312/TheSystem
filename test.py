@@ -1,3 +1,3 @@
-thing = [1]
-thing.remove(1)
-print(thing)
+from random import choice
+
+print(choice(range(4)))

@@ -2,7 +2,7 @@ from .utilfunctions import *
 
 from json import dump, load
 from csv import reader, writer
-from random import choice
+from random import choice, randint
 from os import listdir
 
 
@@ -117,51 +117,65 @@ def new_student():
     return None
 
 
-def create_user():
-    # Fetch existing user data
-    try:
-        with open("users.json", "r") as file:
-            contents = load(file)
-    except FileNotFoundError:
-        print("User data file could not be found.")
-        exit(1)
-    except Exception:
-        print("An unknown error occurred.")
-        exit(1)
+def new_user():
+    # Getch existing user data
+    with open("references/users.json", "r") as file:
+        contents = load(file)
+    existing_users = contents.keys()
 
-
-    characters = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
-    password = ""
-
-    # Get new user's username
+    # Get username
     while True:
-        username = input("Enter new user's username: ")
-        if not username:
-            print("Username field cannot be blank.")
-        elif username in contents.keys():
-            print(f"User {username} already exists.")
-        else: break
+        new_username = input("Enter the username: ")
+        if new_username.lower() == "q" or new_username.lower() == "quit":
+            return None
 
-    # Create random password
+        if not new_username:
+            print("Field cannot be empty.")
+            continue
+
+        if new_username in existing_users:
+            print("Username already in use.")
+            continue
+
+        if len(new_username) < 3:
+            print("Username must be at least 4 characters.")
+            continue
+        break
+
+    # Get names
+    while True:
+        first_name = input("Enter the user's first name: ").capitalize()
+        if first_name.lower() == "q" or first_name.lower() == "quit": return None
+        last_name = input("Enter the user's last name: ").capitalize()
+        if last_name.lower() == "q" or last_name.lower() == "quit": return None
+        nick_name = input("Enter the user's nickname: ")
+        if nick_name.lower() == "q" or nick_name.lower() == "quit": return None
+
+        if not first_name or not last_name or not nick_name:
+            print("All fields must be filled out.")
+            continue
+        break
+
+    # Save to x-mans list
+    with open("x_mans_files/x_men_list.csv", "a", newline="") as file:
+        _ = writer(file)
+        _.writerow([first_name, last_name, to_title_case(nick_name), new_username])
+    
+    # Generate password
+    password = ""
     for _ in range(4):
-        password += choice(characters)
-    print(f"User's password is:  {password}")
+        password += str(randint(0,9))
+    
+    # Save username and password
+    contents.update({new_username:password})
+    with open("references/users.json", "w") as file:
+        dump(contents, file)
 
-
-    # Save new username and password
-    contents.update({username:password})
-    try:
-        with open("users.json", "w") as file:
-            dump(contents, file)
-    except FileNotFoundError:
-        print("The user data file could not be found.")
-        exit(1)
-    except Exception:
-        print("An unknown error occurred.")
-        exit(1)
-    else:
-        print(f"User {username} created successfully.")
-    return None
+    # Add user to existing mission logs
+    for path in listdir("x_mans_files/mission_logs"):
+        with open(f"x_mans_files/mission_logs/{path}", "a", newline="") as file:
+            _ = writer(file)
+            _.writerow([first_name, last_name, nick_name, 0, 0])
 
 
 def approve_supply_requests():
@@ -594,11 +608,6 @@ def approve_hours():
         _.writerows(month_entries)
     
     print("Hours updated successfully.")
-
-
-    
-
-    
 
 
 if __name__ == "__main__":
