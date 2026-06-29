@@ -291,6 +291,7 @@ def supplies(username):
             exit(1)
         else:
             print("Request placed successsfully. Your supply request will be reviewed and potentially apporoved by admin.")
+            print()
             return None
 
 

@@ -211,9 +211,10 @@ def move_class():
                     continue
                 
                 # Remove class from old category
-                with open(f"school_classes/{CATEGORIES[category]}.txt", "r+") as file:
-                    contents = file.readlines()
-                    contents.remove(relocate_class + "\n")
+                contents = get_class_from_category(CATEGORIES[category])
+                contents.remove(relocate_class)
+                contents = [x + "\n" for x in contents]
+                with open(f"school_classes/{CATEGORIES[category]}.txt", "w") as file:
                     file.writelines(contents)
 
                 # Add class to new category

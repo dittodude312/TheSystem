@@ -2,7 +2,7 @@ from .utilfunctions import *
 
 from json import dump, load
 from csv import reader, writer
-from random import choice, randint
+from random import randint
 from os import listdir
 
 
@@ -157,9 +157,10 @@ def new_user():
         break
 
     # Save to x-mans list
+    nick_name = to_title_case(nick_name)
     with open("x_mans_files/x_men_list.csv", "a", newline="") as file:
         _ = writer(file)
-        _.writerow([first_name, last_name, to_title_case(nick_name), new_username])
+        _.writerow([first_name, last_name, nick_name, new_username])
     
     # Generate password
     password = ""
@@ -176,6 +177,12 @@ def new_user():
         with open(f"x_mans_files/mission_logs/{path}", "a", newline="") as file:
             _ = writer(file)
             _.writerow([first_name, last_name, nick_name, 0, 0])
+
+    # Add profile file
+    with open(f"x_mans_files/profiles/{new_username}.json", "w") as file:
+        dump({"Username": new_username, "First Name": first_name, "Last Name": last_name,
+              "Nickname": nick_name, "Monthly Hours": "", "Monthly Mission Count": "",
+              "All Time Hours": "0", "All Time Missions": "0"}, file)
 
 
 def approve_supply_requests():
@@ -560,6 +567,7 @@ def approve_hours():
             print("Invalid selection.")
             continue
         else: break
+    
     # Remove approved request from requests file
     to_approve = requests[selection - 1]
     requests.remove(to_approve)
@@ -606,7 +614,17 @@ def approve_hours():
     with open(f"x_mans_files/mission_logs/xmans{to_approve[2]}2026.csv", "w", newline="") as file:
         _ = writer(file)
         _.writerows(month_entries)
-    
+
+    # Update profile file
+    with open(f"x_mans_files/profiles/{to_approve[0]}.json", "r") as file:
+        statistics = load(file)
+    tmp = int(statistics["All Time Hours"])
+    tmp += int(to_approve[1])
+    statistics.update({"All Time Hours": str(tmp)})
+    statistics.update({"All Time Missions": str(int(statistics["All Time Missions"]) + 1)})
+    with open(f"x_mans_files/profiles/{to_approve[0]}.json", "w") as file:
+        dump(statistics, file)
+
     print("Hours updated successfully.")
 
 

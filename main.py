@@ -24,7 +24,7 @@ def fetch_data():
     else:
         return contents 
 
-              
+
 def login():
     while True:
         username = input("Username: ")
@@ -56,9 +56,9 @@ def start_menu(username):
               "8 - Change password")
         if username == "admin":
             print("9 - Admin Panel\n" \
-                  "10 - Exit")
+                  "10 - Close System")
         else:
-            print("9 - Exit")
+            print("9 - Close System")
         print("*"*30)
 
         return None
@@ -141,7 +141,7 @@ def admin_panel():
                 continue
         print()
         prompt()
-            
+
 
 def log_user_access(username, start_time):
     date = datetime.today()
@@ -173,7 +173,7 @@ def main():
     print()
 
     log_user_access(username, start_time)
-   
+
 
 if __name__ == "__main__":
     main()
