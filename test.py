@@ -28,4 +28,4 @@ def get_alltime_stats(username):
 
     return hour_total, mission_total
 
-print(get_alltime_stats("doodpool"))
+#print(get_alltime_stats("doodpool"))

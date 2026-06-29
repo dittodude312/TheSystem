@@ -1,7 +1,6 @@
-# TODO: add choosing years for making hours request, userlog viewing, and x mans logs/requests
+# TODO: add choosing years for making hours request, and x mans logs/requests
 # TODO: games?
 # TODO: notifications (would have to go back to like 6 different functions)
-# TODO: x mans profiles
 # TODO: fault tolerance thing
 # TODO: optimize stuff ig
 # TODO: add function to create month entries
@@ -53,7 +52,7 @@ def start_menu(username):
               "5 - Byclops\n" \
               "6 - Colosssus Victims\n"
               "7 - Log Missions\n"
-              "8 - Change password")
+              "8 - Profile Manager")
         if username == "admin":
             print("9 - Admin Panel\n" \
                   "10 - Close System")
@@ -84,7 +83,7 @@ def start_menu(username):
             case "7":
                 menuchoices.log_missions(username)
             case "8":
-                menuchoices.change_password(username)
+                menuchoices.profile_manager(username)
             case "9":
                 if username == "admin":
                     print("Initializing admin panel...")
@@ -178,5 +177,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-    #menuchoices.x_mans()
-    #admincontrols.new_user() 
+    #menuchoices.profile_manager("doodpool")
+    #admincontrols.userlog()

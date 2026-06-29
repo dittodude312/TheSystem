@@ -137,8 +137,7 @@ def x_mans():
         print("*"*30)
         print("1 - View mission logs\n" \
               "2 - View X-Mans\n" \
-              "3 - View X-Man profile\n" \
-              "4 - Exit")
+              "3 - Exit")
         print("*"*30)
     
     
@@ -189,17 +188,6 @@ def x_mans():
             print(f"{line[0]:15}|{line[1]:15}|{line[2]:15}")
         
         input("PRESS ENTER TO CONTINUE ")
-
-    
-    def view_profile():
-        contents = fetch_x_mans()
-
-        for index, line in enumerate(contents):
-            print(f"[{index + 1}] {line[2]} ({line[1]}, {line[0]})")
-
-        while True:
-            choice = input("Enter number to view profile: ")
-            raise NotImplementedError("idk what to put ngl")
         
 
     prompt()
@@ -214,8 +202,6 @@ def x_mans():
                 print()
                 view_x_mans()
             case "3":
-                view_profile()
-            case "4":
                 return None
             case _:
                 print("Invalid selection.")
@@ -391,49 +377,90 @@ def log_missions(username):
                 return None
 
 
-def change_password(username):
-    # Fetch data
-    with open("references/users.json", "r") as file:
-        contents = load(file)
+def profile_manager(username):
+    def prompt():
+        print("*"*30)
+        print("1 - View Profile\n"
+              "2 - Change Password\n"
+              "3 - Notifications\n"
+              "4 - Exit")
+        print("*"*30)
     
-    # Get old password
-    print("Enter your current password to proceed.")
-    while True:
-        old_password = input("Password: ")
-        if old_password.lower() == "q" or old_password.lower() == "quit":
-            return None
 
-        if old_password != contents[username]:
-            print("Password incorrect.")
-            continue
-        else: break
-
-    # Get new password
-    print()
-    while True:
-        new_password = input("Enter your new password: ")
-        if new_password.lower() == "q" or new_password.lower() == "quit":
-            return None
-
-        if not new_password:
-            print("Field cannot be empty.")
-            continue
-
-        if new_password == old_password:
-            print("New password cannot be the same as old password.")
-            continue
-        
+    def view_profile():
         print()
-        if input("Confirm password: ") == new_password: break
-    
-    # Save new password
-    contents.update({username:new_password})
+        with open(f"x_mans_files/profiles/{username}.json", "r") as file:
+            user_data = load(file)
+        
+        print("="*35)
+        for key, value in user_data.items():
+            print(f"{key.upper():23}: {value}")
+        print("="*35)
+        input("PRESS ENTER TO CONTINUE ")
 
-    with open("references/users.json", "w") as file:
-        dump(contents, file)
-    
-    print("\nPassword updated.")
-    input("PRESS ENTER TO CONTINUE ")
+
+    def change_password(username):
+        # Fetch data
+        with open("references/users.json", "r") as file:
+            contents = load(file)
+        
+        # Get old password
+        print("Enter your current password to proceed.")
+        while True:
+            old_password = input("Password: ")
+            if old_password.lower() == "q" or old_password.lower() == "quit":
+                return None
+
+            if old_password != contents[username]:
+                print("Password incorrect.")
+                continue
+            else: break
+
+        # Get new password
+        print()
+        while True:
+            new_password = input("Enter your new password: ")
+            if new_password.lower() == "q" or new_password.lower() == "quit":
+                return None
+
+            if not new_password:
+                print("Field cannot be empty.")
+                continue
+
+            if new_password == old_password:
+                print("New password cannot be the same as old password.")
+                continue
+            
+            print()
+            if input("Confirm password: ") == new_password: break
+        
+        # Save new password
+        contents.update({username:new_password})
+
+        with open("references/users.json", "w") as file:
+            dump(contents, file)
+        
+        print("\nPassword updated.")
+        input("PRESS ENTER TO CONTINUE ")
+
+    prompt()
+    while True:
+        selection = input("Enter your selection: ")
+         
+        match selection:
+            case "1":
+                view_profile()
+            case "2":
+                change_password(username)
+            case "3":
+                pass
+            case "4":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
 
 
 if __name__ == "__main__":

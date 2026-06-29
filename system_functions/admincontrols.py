@@ -50,6 +50,10 @@ def new_student():
                     print("Class does not exist.")
                     continue
 
+                if subject in schedule:
+                    print("Student already has this class.")
+                    continue
+
                 return subject
     
     # Fetch existing students
@@ -430,7 +434,7 @@ def userlog():
     def prompt():
         print("*"*30)
         print("1 - View user log\n"
-              "2 - View log by day\n"
+              "2 - View log by date\n"
               "3 - Clear user log\n"
               "4 - Exit")
         print("*"*30)
@@ -465,22 +469,21 @@ def userlog():
                 logs = fetch_data()
                 # Get date
                 while True:
-                    date = input("Enter the date (m/d): ")
+                    date = input("Enter the date (m/d/y): ")
                     if date.lower() == "q" or date.lower() == "quit": break
                     try:
-                        day = date[date.index("/") + 1:]
-                        month = date[:date.index("/")]
+                        month, day, year = date.split("/")
                     except ValueError:
                         print("Invalid input.")
                         continue
-                    if not day.isdigit() or not month.isdigit():
+                    if not day.isdigit() or not month.isdigit() or not year.isdigit():
                         print("Invalid input.")
                         continue
-                    if int(day) > 31 or int(month) > 12 or int(day) <= 0 or int(month) <= 0:
+                    if int(day) > 31 or int(month) > 12 or int(day) <= 0 or int(month) <= 0 or len(year) != 4:
                         print("Invalid input.")
                         continue
                 
-                    logs = list(filter(lambda x: f"{month:>02}/{day:>02}/" in x, logs))
+                    logs = list(filter(lambda x: f"{month:>02}/{day:>02}/{year}" in x, logs))
 
                     print()
                     display_logs(logs)
