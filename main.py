@@ -115,7 +115,7 @@ def admin_panel():
     prompt()
     while True:
         selection = input("Enter your selection: ")
-
+        print("_"*30)
         match selection:
             case "1":
                 admincontrols.new_student()

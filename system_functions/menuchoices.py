@@ -349,7 +349,6 @@ def colossus_victims():
 def log_missions(username):
     # Get year
     years = [x[-8:-4] for x in listdir("x_mans_files/mission_logs")]
-    print(years)
     while True:
         year = input("Enter year to view logs: ")
         if year.lower() == "q" or year.lower() == "quit":
