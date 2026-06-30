@@ -175,7 +175,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
 
-    #menuchoices.profile_manager("doodpool")
+    menuchoices.x_mans()
     #admincontrols.userlog()

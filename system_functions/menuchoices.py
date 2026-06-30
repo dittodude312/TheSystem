@@ -156,15 +156,17 @@ def x_mans():
         # Fetch log data
         while True:
             try:
+                year = input("Enter the year to view X-Mans logs: ")
+                if year.lower() == "q" or year.lower() == "quit": return None
                 month = input("Enter the month to view X-Mans logs: ")
                 if month.lower() == "q" or month.lower() == "quit": return None
-                with open(f"x_mans_files/mission_logs/xmans{month}2026.csv") as file:
+                with open(f"x_mans_files/mission_logs/{year}logs/xmans{month}{year}.csv") as file:
                     _ = reader(file)
                     for line in _: contents.append(line)
                     contents.remove(contents[0])
                     del _
             except FileNotFoundError:
-                print("Files could not be found. Check if month was entered correctly. If so, contact admin if issue persists.")
+                print("Files could not be found. Check if month and year were entered correctly. If so, contact admin if issue persists.")
                 continue
             except Exception:
                 print("An unknown error occurred.")
@@ -172,7 +174,7 @@ def x_mans():
             else: break
 
         # Display data
-        print(month.upper() + " " + "-"*32 + "|" + "Missions  |Hours")
+        print(year + " - " + month.upper() + " " + "-"*27 + "|Missions  |Hours")
         for line in contents:
             print(f"{(line[1] + ", " + line[0] + " (" + line[2] + ")"):35} | {line[3]:>8} | {line[4]:>6}")
         print("-"*55)
@@ -345,7 +347,23 @@ def colossus_victims():
 
 
 def log_missions(username):
-    months = [x[-11:-8] for x in listdir("x_mans_files/mission_logs")]
+    # Get year
+    years = [x[-8:-4] for x in listdir("x_mans_files/mission_logs")]
+    print(years)
+    while True:
+        year = input("Enter year to view logs: ")
+        if year.lower() == "q" or year.lower() == "quit":
+            return None
+
+        if len(year) != 4 or not year.isdigit():
+            print("Invalid input.")
+            continue
+        
+        if year not in years:
+            print("Year doesn't have any entries.")
+            continue
+        break
+    months = [x[-11:-8] for x in listdir(f"x_mans_files/mission_logs/{year}logs")]
     # Get month
     while True:
         month = input("Enter the month to log mission: ").capitalize()
@@ -372,7 +390,7 @@ def log_missions(username):
                 # Save request
                 with open("x_mans_files/requests/hour_requests.csv", "a", newline="") as file:
                     _ = writer(file)
-                    _.writerow([username, hours, month])
+                    _.writerow([username, hours, month, year])
                 print("Mission requested successfully. Admin will review it for approval to be logged.")
                 return None
 
