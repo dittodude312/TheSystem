@@ -29,3 +29,17 @@ def get_alltime_stats(username):
     return hour_total, mission_total
 
 #print(get_alltime_stats("doodpool"))
+
+thing = [1,2,3,4,5]
+a = 6
+print(list(range(1, len(thing) + 1)))
+if a not in range(1, len(thing) + 1):
+    print("no")
+else: print("yes")
+thing2 = thing.copy()
+print(thing2)
+
+thing[0] = 69
+
+print(thing)
+print(thing2)

@@ -388,7 +388,7 @@ def log_missions(username):
                 continue
             else:
                 # Save request
-                with open("x_mans_files/requests/hour_requests.csv", "a", newline="") as file:
+                with open("x_mans_files/hour_requests.csv", "a", newline="") as file:
                     _ = writer(file)
                     _.writerow([username, hours, month, year])
                 print("Mission requested successfully. Admin will review it for approval to be logged.")

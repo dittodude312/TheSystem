@@ -175,7 +175,7 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
+    main()
 
-    menuchoices.x_mans()
-    #admincontrols.userlog()
+    #menuchoices.x_mans()
+    #admincontrols.approve_hoursv2()
