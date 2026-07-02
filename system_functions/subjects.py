@@ -1,7 +1,7 @@
 from .utilfunctions import *
 
 from os import listdir
-from json import load
+from json import load,dump
 
 
 def view_classes():
@@ -155,6 +155,16 @@ def rename_class():
 
                 with open(f"school_classes/{CATEGORIES[category]}.txt", "w") as file:
                     file.writelines(classes)
+
+                for student in listdir("student_grades"):
+                    with open(f"student_grades/{student}", "r") as file:
+                        contents = load(file)
+                    if old_name in contents.keys():
+                        contents = change_key(contents, old_name, new_name)
+                        with open(f"student_grades/{student}", "w") as file:
+                            dump(contents, file)
+                    else: continue
+                
                 print("Class renamed successfully.")
                 return None
 

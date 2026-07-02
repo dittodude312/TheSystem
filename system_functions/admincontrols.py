@@ -4,6 +4,7 @@ from json import dump, load
 from csv import reader, writer
 from random import randint
 from os import listdir
+from datetime import datetime
 
 
 def display_classes(category):
@@ -178,9 +179,10 @@ def new_user():
 
     # Add user to existing mission logs
     for path in listdir("x_mans_files/mission_logs"):
-        with open(f"x_mans_files/mission_logs/{path}", "a", newline="") as file:
-            _ = writer(file)
-            _.writerow([first_name, last_name, nick_name, 0, 0])
+        for file in listdir(f"x_mans_files/mission_logs/{path}"):
+            with open(f"x_mans_files/mission_logs/{path}/{file}", "a", newline="") as file:
+                _ = writer(file)
+                _.writerow([first_name, last_name, nick_name, 0, 0])
 
     # Add profile file
     with open(f"x_mans_files/profiles/{new_username}.json", "w") as file:
@@ -603,6 +605,30 @@ def approve_hours():
     print("Hours updated successfully.")
 
 
+def new_month():
+    MONTHS = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}
+    current_month = 6
+    current_month = MONTHS[current_month]
+    current_year = datetime.today().year
+
+    if f"xmans{current_month}{current_year}.csv" in listdir(f"x_mans_files/mission_logs/{current_year}logs"):
+        print("Entry already exists for this month.")
+        return None
+    
+    x_men = []
+    with open("x_mans_files/x_men_list.csv", "r") as file:
+        _ = reader(file)
+        for line in _: x_men.append([line[0], line[1], line[2], 0, 0])
+        x_men.remove(x_men[0])
+    
+    with open(f"x_mans_files/mission_logs/{current_year}logs/xmans{current_month}{current_year}.csv", "w", newline="") as file:
+        _ = writer(file)
+        x_men.insert(0, ["FirstName", "LastName", "Nickname", "MissionCount", "HoursLogged"])
+        _.writerows(x_men)
+
+    print("Entry created successfully.")
+    input("PRESS ENTER TO CONTINUE ")
+
+
 if __name__ == "__main__":
-    #add hour/misson logging for normal users and approval for admin panel.
     print("Running admincontrols.py")

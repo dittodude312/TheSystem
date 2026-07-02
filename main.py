@@ -1,9 +1,7 @@
-# TODO: add choosing years for making hours request, and x mans logs/requests
 # TODO: games?
 # TODO: notifications (would have to go back to like 6 different functions)
 # TODO: fault tolerance thing
 # TODO: optimize stuff ig
-# TODO: add function to create month entries
 
 
 from system_functions import *
@@ -91,9 +89,12 @@ def start_menu(username):
                 else: return None
             case "10":
                 if username == "admin": return None
-                else: print("Invalid input.")
+                else: 
+                    print("Invalid input.")
+                    continue
             case _:
                 print("Invalid input.")
+                continue
         print()
         prompt()
 
@@ -109,7 +110,8 @@ def admin_panel():
               "6 - View logs\n" \
               "7 - View students\n" \
               "8 - Approve mission hours\n" \
-              "9 - Exit")
+              "9 - Update month entries\n" \
+              "10 - Exit")
         print("*"*30)
     
     prompt()
@@ -134,6 +136,8 @@ def admin_panel():
             case "8":
                 admincontrols.approve_hours()
             case "9":
+                admincontrols.new_month()
+            case "10":
                 return None
             case _:
                 print("Invalid selection.")
@@ -178,4 +182,4 @@ if __name__ == "__main__":
     main()
 
     #menuchoices.x_mans()
-    #admincontrols.approve_hoursv2()
+    #admincontrols.new_month()

@@ -8,6 +8,6 @@ Cybersecurity
 Computer Science
 Data Science
 Machine Learning
-Computer Architecture
+Computer Arch
 Computer Hardware
 Databases
