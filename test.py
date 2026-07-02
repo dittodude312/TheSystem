@@ -1,5 +1,5 @@
-from os import listdir
-
-for path in listdir("x_mans_files/mission_logs"):
-    for file in listdir(f"x_mans_files/mission_logs/{path}"):
-        print(file)
+tup = (1,2,3,4,5)
+print(tup)
+print(tup)
+for item in tup:
+    print(item)

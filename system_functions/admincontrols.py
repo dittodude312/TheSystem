@@ -7,6 +7,14 @@ from os import listdir
 from datetime import datetime
 
 
+def unicast_notif(recipient, message):
+    with open(f"x_mans_files/profiles/{recipient}.json", "r") as file:
+        data = load(file)
+    data["Notifications"].append(message)
+    with open(f"x_mans_files/profiles/{recipient}.json", "w") as file:
+        dump(data, file)
+
+
 def display_classes(category):
     classes = get_class_from_category(CATEGORIES[category])     
 
@@ -188,7 +196,7 @@ def new_user():
     with open(f"x_mans_files/profiles/{new_username}.json", "w") as file:
         dump({"Username": new_username, "First Name": first_name, "Last Name": last_name,
               "Nickname": nick_name, "Monthly Hours": "", "Monthly Mission Count": "",
-              "All Time Hours": "0", "All Time Missions": "0"}, file)
+              "All Time Hours": 0, "All Time Missions": 0, "Notifications": []}, file)
 
 
 def approve_supply_requests():
@@ -287,6 +295,8 @@ def approve_supply_requests():
     with open("supplies/supplyorders.csv", "a", newline="") as file:
         _ = writer(file)
         _.writerow(request)
+
+    unicast_notif(request[0], f"Your request for {request[2]} {request[1]} was approved.")
 
     print("\nOrder placed successfully.")
     return None
@@ -601,11 +611,14 @@ def approve_hours():
     with open(f"x_mans_files/mission_logs/{to_approve[3]}logs/xmans{to_approve[2]}{to_approve[3]}.csv", "w", newline="") as file:
         _ = writer(file)
         _.writerows(all_entries)
+
+    unicast_notif(profile_data["Nickname"], f"Your request for {to_approve[1]} hours was approved.")
     
     print("Hours updated successfully.")
 
 
 def new_month():
+    # Find current month and year
     MONTHS = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}
     current_month = 6
     current_month = MONTHS[current_month]
@@ -615,12 +628,14 @@ def new_month():
         print("Entry already exists for this month.")
         return None
     
+    # Fetch x_mans data
     x_men = []
     with open("x_mans_files/x_men_list.csv", "r") as file:
         _ = reader(file)
         for line in _: x_men.append([line[0], line[1], line[2], 0, 0])
         x_men.remove(x_men[0])
-    
+
+    # Create month entry
     with open(f"x_mans_files/mission_logs/{current_year}logs/xmans{current_month}{current_year}.csv", "w", newline="") as file:
         _ = writer(file)
         x_men.insert(0, ["FirstName", "LastName", "Nickname", "MissionCount", "HoursLogged"])
@@ -628,6 +643,84 @@ def new_month():
 
     print("Entry created successfully.")
     input("PRESS ENTER TO CONTINUE ")
+
+
+def send_notif():
+    def prompt():
+        print("1 - Unicast\n" \
+              "2 - Broadcast\n" \
+              "3 - Exit")
+    
+    
+    def unicast():
+        users = [x[:-5] for x in listdir("x_mans_files/profiles")]
+        
+        while True:
+            recipient = input("Enter user to notify: ")
+
+            if recipient.lower() == "q" or recipient.lower() == "quit":
+                return None
+
+            if recipient not in users:
+                print("User does not exist.")
+                continue
+
+            print()
+            while True:
+                message = input("Enter message for notification: ")
+
+                if message.lower() == "q" or message.lower() == "quit":
+                    print()
+                    break
+                
+                if not message:
+                    print("Field cannot be empty.")
+                    continue
+
+                unicast_notif(recipient, message)
+
+                print("User notified successfully.")
+                return None
+
+
+    def broadcast():
+        while True:
+            message = input("Enter message for notification: ")
+            
+            if message.lower() == "q" or message.lower() == "quit":
+                return None
+            
+            if not message:
+                print("Field cannot be empty.")
+                continue
+            break
+            
+        for profile in listdir("x_mans_files/profiles")[:4]:
+            with open(f"x_mans_files/profiles/{profile}", "r") as file:
+                data = load(file)
+                if data["Username"] == "admin": continue
+                data["Notifications"].append(message)
+            
+            with open(f"x_mans_files/profiles/{profile}", "w") as file:
+                dump(data, file)
+        
+        print("All X-Mans notified successfully.")
+
+    prompt()
+    while True:
+        selection = input("Enter your selection: ")
+        match selection.lower():
+            case "1":
+                unicast()
+            case "2":
+                broadcast()
+            case "3":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
 
 
 if __name__ == "__main__":

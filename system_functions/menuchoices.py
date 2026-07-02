@@ -174,7 +174,7 @@ def x_mans():
             else: break
 
         # Display data
-        print(year + " - " + month.upper() + " " + "-"*27 + "|Missions  |Hours")
+        print(year + " - " + month.upper() + " " + "-"*25 + "|Missions  |Hours")
         for line in contents:
             print(f"{(line[1] + ", " + line[0] + " (" + line[2] + ")"):35} | {line[3]:>8} | {line[4]:>6}")
         print("-"*55)
@@ -350,7 +350,7 @@ def log_missions(username):
     # Get year
     years = [x[-8:-4] for x in listdir("x_mans_files/mission_logs")]
     while True:
-        year = input("Enter year to view logs: ")
+        year = input("Enter year to log mission: ")
         if year.lower() == "q" or year.lower() == "quit":
             return None
 
@@ -410,8 +410,11 @@ def profile_manager(username):
             user_data = load(file)
         
         print("="*35)
-        for key, value in user_data.items():
+        for key, value in list(user_data.items())[:-1]:
             print(f"{key.upper():23}: {value}")
+        
+        tmp = len(user_data["Notifications"])
+        print(f"NOTIFICATIONS          : {"No notifications" if tmp == 0 else str(tmp) + " notifications"}")
         print("="*35)
         input("PRESS ENTER TO CONTINUE ")
 
@@ -460,6 +463,22 @@ def profile_manager(username):
         print("\nPassword updated.")
         input("PRESS ENTER TO CONTINUE ")
 
+
+    def notifications():
+        print()
+        with open(f"x_mans_files/profiles/{username}.json", "r") as file:
+            user_data = load(file)
+        
+        for index, element in enumerate(user_data["Notifications"]):
+            print(f"[{index + 1}] {element}")
+        
+        input("PRESS ENTER TO CONTINUE ")
+
+        user_data["Notifications"] = []
+        with open(f"x_mans_files/profiles/{username}.json", "w") as file:
+            dump(user_data, file)
+    
+
     prompt()
     while True:
         selection = input("Enter your selection: ")
@@ -470,7 +489,7 @@ def profile_manager(username):
             case "2":
                 change_password(username)
             case "3":
-                pass
+                notifications()
             case "4":
                 return None
             case _:

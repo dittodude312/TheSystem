@@ -1,5 +1,4 @@
 # TODO: games?
-# TODO: notifications (would have to go back to like 6 different functions)
 # TODO: fault tolerance thing
 # TODO: optimize stuff ig
 
@@ -182,4 +181,4 @@ if __name__ == "__main__":
     main()
 
     #menuchoices.x_mans()
-    #admincontrols.new_month()
+    #admincontrols.approve_supply_requests()
