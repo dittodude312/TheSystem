@@ -15,23 +15,12 @@ def unicast_notif(recipient, message):
         dump(data, file)
 
 
-def display_classes(category):
-    classes = get_class_from_category(CATEGORIES[category])     
-
-    print("="*30)
-    for index, element in enumerate(classes):
-        print(f"{index + 1} - {element}")
-    print("="*30)
-
-    return classes
-
-
 def new_student():
     def add_hour():
         display_categories()
         # Get category for class
         while True:
-            category = input("Enter the category of the class: ")
+            category = to_title_case(input("Enter the category of the class: "))
 
             if category.lower() == "q" or category.lower() == "quit":
                 confirm = input("Are you sure you want to cancel: ")
@@ -49,7 +38,7 @@ def new_student():
             print("*"*30)
             # Get class name
             while True:
-                subject = input("Enter the class name: ")
+                subject = to_title_case(input("Enter the class name: "))
 
                 if subject.lower() == "q" or subject.lower() == "quit":
                     display_categories()
@@ -451,12 +440,14 @@ def userlog():
               "4 - Exit")
         print("*"*30)
 
+
     def fetch_data():
         with open("userlog.txt", "r") as file:
             contents = file.readlines()
             contents = [x[:-1] for x in contents]
             
         return contents
+
     
     def display_logs(log_data):
         if not log_data:
@@ -647,9 +638,11 @@ def new_month():
 
 def send_notif():
     def prompt():
+        print("*"*30)
         print("1 - Unicast\n" \
               "2 - Broadcast\n" \
               "3 - Exit")
+        print("*"*30)
     
     
     def unicast():

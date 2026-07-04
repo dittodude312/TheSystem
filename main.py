@@ -1,8 +1,8 @@
 # TODO: games?
-# TODO: fault tolerance thing
 # TODO: optimize stuff ig
+# TODO: doc strings
 
-
+#from os import getenv
 from system_functions import *
 from json import load
 from datetime import datetime, timedelta
@@ -110,7 +110,8 @@ def admin_panel():
               "7 - View students\n" \
               "8 - Approve mission hours\n" \
               "9 - Update month entries\n" \
-              "10 - Exit")
+              "10 - Send notifications\n" \
+              "11 - Exit")
         print("*"*30)
     
     prompt()
@@ -137,6 +138,8 @@ def admin_panel():
             case "9":
                 admincontrols.new_month()
             case "10":
+                admincontrols.send_notif()
+            case "11":
                 return None
             case _:
                 print("Invalid selection.")
@@ -164,8 +167,13 @@ def main():
     start_time = datetime.now()
     print()
     username = authenticate()
+
+    with open(f"x_mans_files/profiles/{username}.json", "r") as file:
+        notifications = len(load(file)["Notifications"])
+
     print("-"*30)
     print(f"Logged in successfully. Welcome {username}.")
+    print(f"You have {notifications} notifications.")
     print("-"*30)
 
     start_menu(username)
@@ -180,5 +188,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-    #menuchoices.x_mans()
-    #admincontrols.approve_supply_requests()
+    #menuchoices.supplies("doodpool")
+    #admincontrols.userlog()

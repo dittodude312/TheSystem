@@ -1,17 +1,8 @@
+from .utilfunctions import to_title_case
+
 from json import load, dump
 from csv import reader, writer
 from os import listdir
-
-
-def input_check(prompt, acceptable_values):
-    while True:
-        selection = input(prompt)
-        if selection.lower() == "q" or selection.lower() == "quit":
-            return "QUIT"
-        elif selection not in acceptable_values:
-            print("Invalid input.")
-            continue
-        else: return selection
 
 
 def grades():
@@ -27,11 +18,29 @@ def grades():
 
     def change_grade():
         # Get grade and subject
-        subject = input_check("Enter subject to change grade: ", contents.keys())
-        if subject == "QUIT": return None
+        print()
+        while True:
+            subject = to_title_case(input("Enter class to change grade: "))
 
-        new_grade = input_check("Enter new grade: ", ("A", "B", "C", "D", "E", "F"))
-        if new_grade == "QUIT": return None
+            if subject.lower() == "q" or subject.lower() == "quit":
+                return None 
+            
+            if subject not in contents.keys():
+                print("Student doesn't take this class.")
+                continue
+            break
+        
+        print()
+        while True:
+            new_grade = input("Enter new grade: ").upper()
+
+            if new_grade.lower() == "q" or new_grade.lower() == "quit":
+                return None
+            
+            if new_grade not in ("A", "B", "C", "D", "E", "F"):
+                print("Invalid input.")
+                continue
+            break
 
         # Update grades
         contents.update({subject:new_grade})
@@ -214,41 +223,44 @@ def x_mans():
 
 def supplies(username):
     def order_supplies():
+        # Get supply options
+        supply_options = []
+        with open("supplies/supplycosts.csv", "r") as file:
+            _ = reader(file)
+            for line in _: supply_options.append(line[0])
+            supply_options.remove(supply_options[0])
+
+        # Get supply name
         print("-"*15)
         print("What supplies do you want to request?")
-        print("1 - Papers\n" \
-              "2 - Staples\n" \
-              "3 - Erasers\n" \
-              "4 - Pencils\n" \
-              "5 - Rulers\n" \
-              "6 - Desks\n" \
-              "7 - Tables\n" \
-              "8 - Other")
+        for item in supply_options: print(f"- {item}")
         print("-"*15)
-        # Get supply name
         while True:
-            supply = input("Enter your desired supply: ")
-            match supply.lower():
-                case "1": supply = "Papers"
-                case "2": supply = "Staples"
-                case "3": supply = "Erasers"
-                case "4": supply = "Pencils"
-                case "5": supply = "Rulers"
-                case "6": supply = "Desks"
-                case "7": supply = "Tables"
-                case "8":
-                    supply = input("Enter name of supply: ")
-                    if not supply:
-                        print("Field cannot be empty.")
-                        continue
-                case "q" | "quit":
-                    return None
-                case _:
-                    print("Invalid selection.")
+            supply = input("Enter your desired supply: ").capitalize()
+
+            if supply.lower() == "q" or supply.lower() == "quit":
+                return None
+
+            if supply == "Other":
+                supply = to_title_case(input("Enter other supply name: "))
+
+                if supply.lower() == "q" or supply.lower() == "quit": 
+                    print()
                     continue
+
+                if not supply:
+                    print("Field cannot be empty.")
+                    print()
+                    continue
+                break
+
+            if supply not in supply_options:
+                print("Supply could not be found.")
+                continue
             break
         
         # Get supply quantity
+        print()
         while True:
             try:
                 quantity = input("Enter the quantity of the supply: ")
@@ -261,7 +273,7 @@ def supplies(username):
                     print("Quantity must be larger than 0.")
                     continue
             except ValueError:
-                print("Value must be number.")
+                print("Invalid input.")
             else: break
         
         #Write data
@@ -363,6 +375,7 @@ def log_missions(username):
             continue
         break
     months = [x[-11:-8] for x in listdir(f"x_mans_files/mission_logs/{year}logs")]
+    
     # Get month
     while True:
         month = input("Enter the month to log mission: ").capitalize()
@@ -469,8 +482,11 @@ def profile_manager(username):
         with open(f"x_mans_files/profiles/{username}.json", "r") as file:
             user_data = load(file)
         
-        for index, element in enumerate(user_data["Notifications"]):
-            print(f"[{index + 1}] {element}")
+        if not user_data["Notifications"]:
+            print("No notifications to view.")
+        else:
+            for index, element in enumerate(user_data["Notifications"]):
+                print(f"[{index + 1}] {element}")
         
         input("PRESS ENTER TO CONTINUE ")
 

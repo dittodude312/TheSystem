@@ -17,7 +17,7 @@ def add_class():
 
     # Get new class's category
     while True:
-        category = input("Enter the category for the class: ")
+        category = to_title_case(input("Enter the category for the class: "))
         
         if category.lower() == "q" or category.lower() == "quit":
             return None
@@ -60,7 +60,7 @@ def remove_class():
 
     # Get category of the class
     while True:
-        category = input("Enter the category of the class to remove: ")
+        category = to_title_case(input("Enter the category of the class to remove: "))
 
         if category.lower() == "q" or category.lower() == "quit":
             return None
@@ -75,7 +75,7 @@ def remove_class():
         print("*"*30)
         # Get name of the class to remove
         while True:
-            delete_class = input("Enter the name of the class: ")
+            delete_class = to_title_case(input("Enter the name of the class: "))
 
             if delete_class.lower() == "q" or delete_class.lower() == "quit":
                 display_categories()
@@ -109,7 +109,7 @@ def rename_class():
 
     # Get class category
     while True:
-        category = input("Enter the category of the class to rename: ")
+        category = to_title_case(input("Enter the category of the class to rename: "))
 
         if category.lower() == "q" or category.lower() == "quit":
             return None
@@ -124,7 +124,7 @@ def rename_class():
         print("*"*30)
         # Get old name
         while True:
-            old_name = input("Enter the class name: ")
+            old_name = to_title_case(input("Enter the class name: "))
 
             if old_name.lower() == "q" or old_name.lower() == "quit":
                 display_categories()
@@ -136,7 +136,7 @@ def rename_class():
             
             # Get new name
             while True:
-                new_name = input("Enter the class's new name: ")
+                new_name = to_title_case(input("Enter the class's new name: "))
 
                 if not new_name:
                     print("Field cannot be empty.")
@@ -174,7 +174,7 @@ def move_class():
 
     # Get class category
     while True:
-        category = input("Enter the category of the class to move: ")
+        category = to_title_case(input("Enter the category of the class to move: "))
         if category.lower() == "q" or category.lower() == "quit":
             return None
         
@@ -188,7 +188,7 @@ def move_class():
         print("*"*30)
         # Get class name
         while True:
-            relocate_class = input("Enter the class name: ")
+            relocate_class = to_title_case(input("Enter the class name: "))
             
             if relocate_class.lower() == "q" or relocate_class.lower() == "quit":
                 display_categories()
@@ -200,7 +200,7 @@ def move_class():
             
             # Get new category
             while True:
-                new_category = input("Enter the new category: ")
+                new_category = to_title_case(input("Enter the new category: "))
 
                 if new_category.lower() == "q" or new_category.lower() == "quit":
                     print("*"*30)

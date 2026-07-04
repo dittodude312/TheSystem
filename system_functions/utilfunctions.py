@@ -16,6 +16,8 @@ def get_class_from_category(category_path):
 
 
 def to_title_case(string):
+    if not string: return ""
+
     stop = 0
     words = []
     space_number = 0
