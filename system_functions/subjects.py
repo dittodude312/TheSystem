@@ -1,17 +1,31 @@
+"""
+    File containing functionality for managing school classes.
+    Only availible for admin user.
+"""
 from .utilfunctions import *
 
 from os import listdir
 from json import load,dump
 
 
-def view_classes():
+def view_classes() -> None:
+    """
+    Formats and displays all classes under their category.
+    :return: None
+    :rtype: None
+    """
     for category in CATEGORIES.keys():
         print(category.upper())
         for element in get_class_from_category(CATEGORIES[category]):
             print("\t" + element)
 
 
-def add_class():
+def add_class() -> None:
+    """
+    Adds new class to given category.
+    :return: None
+    :rtype: None
+    """
     # Display categories
     display_categories()
 
@@ -54,7 +68,12 @@ def add_class():
             return None
 
 
-def remove_class():
+def remove_class() -> None:
+    """
+    Remove class from given category if no students take the class.
+    :return: None
+    :rtype: None
+    """
     # Display categories
     display_categories()
 
@@ -104,7 +123,12 @@ def remove_class():
             return None
 
 
-def rename_class():
+def rename_class() -> None:
+    """
+    Renames class found in given category.
+    :return: None
+    :rtype: None
+    """
     display_categories()
 
     # Get class category
@@ -169,7 +193,12 @@ def rename_class():
                 return None
 
 
-def move_class():
+def move_class() -> None:
+    """
+    Moves given class from one category to another given category.
+    :return: None
+    :rtype: None
+    """
     display_categories()
 
     # Get class category
@@ -235,7 +264,12 @@ def move_class():
                 return None
 
 
-def main():
+def main() -> None:
+    """
+    Main function for accessing other functionality for mananging classes.
+    :return: None
+    :rtype: None
+    """
     def prompt():
         print("*"*30)
         print("1 - View classes\n" \

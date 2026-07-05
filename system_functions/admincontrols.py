@@ -1,3 +1,8 @@
+"""
+    File containing functionality for admin panel.
+    Only availible for admin user.
+"""
+
 from .utilfunctions import *
 
 from json import dump, load
@@ -7,7 +12,16 @@ from os import listdir
 from datetime import datetime
 
 
-def unicast_notif(recipient, message):
+def unicast_notif(recipient:str, message:str) -> None:
+    """
+    Adds message to notification value of user's JSON object.
+    :param recipient: Username of user to recieve message.
+    :type recipient: str
+    :param message: Message to send to recipient.
+    :type message: str
+    :return: None
+    :rtype: None
+    """
     with open(f"x_mans_files/profiles/{recipient}.json", "r") as file:
         data = load(file)
     data["Notifications"].append(message)
@@ -15,8 +29,18 @@ def unicast_notif(recipient, message):
         dump(data, file)
 
 
-def new_student():
+def new_student() -> None:
+    """
+    Gets name, grade, and schedule for student and adds it to proper files and directories.
+    :return: None
+    :rtype: None
+    """
     def add_hour():
+        """
+        Gets one valid subject from category.
+        :return: Single existing subject for student.
+        :rtype: str, None if cancel.
+        """
         display_categories()
         # Get category for class
         while True:
@@ -119,7 +143,12 @@ def new_student():
     return None
 
 
-def new_user():
+def new_user() -> None:
+    """
+    Gets information of user and adds it to proper files and directories.
+    :return: None
+    :rtype: None
+    """
     # Getch existing user data
     with open("references/users.json", "r") as file:
         contents = load(file)
@@ -188,7 +217,12 @@ def new_user():
               "All Time Hours": 0, "All Time Missions": 0, "Notifications": []}, file)
 
 
-def approve_supply_requests():
+def approve_supply_requests() -> None:
+    """
+    Moves approved request to orders file.
+    :return: None
+    :rtype: None
+    """
     requests = []
     items = []
     costs = []
@@ -291,8 +325,18 @@ def approve_supply_requests():
     return None
 
 
-def add_test_scores():
-    def prompt():
+def add_test_scores() -> None:
+    """
+    Adds valid testscores for student or year.
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         print("1 - Add student score\n"
               "2 - Create new year entry\n"
@@ -300,7 +344,16 @@ def add_test_scores():
         print("*"*30)
 
 
-    def valid_score(prompt, max):
+    def valid_score(prompt: str, max:int) -> int:
+        """
+        Get valid input from user within specified range.
+        :param prompt: Input prompt for user.
+        :type prompt: str
+        :param max: Maximum value user is allowed to enter inside function.
+        :type max: int
+        :return: Valid score within range.
+        :rtype: int
+        """
         while True:
             try:
                 score = int(input(prompt))
@@ -316,7 +369,12 @@ def add_test_scores():
         return score            
 
 
-    def add_score():
+    def add_score() -> None:
+        """
+        Add single yearly entry for one student with test scores.
+        :return: None
+        :rtype: None
+        """
         students = [x[:-5] for x in listdir("student_grades")]
         existing_students = []
 
@@ -385,7 +443,12 @@ def add_test_scores():
         else: return None
 
 
-    def add_entry():
+    def add_entry() -> None:
+        """
+        Create new file for new year entry of test scores.
+        :return: None
+        :rtype: None
+        """
         while True:
             existing_years = [x[-8:-4] for x in listdir("student_testscores")]
             year = input("Enter the year: ")
@@ -412,7 +475,6 @@ def add_test_scores():
             print("Entry created successfully.")
             return None
 
-
     prompt()
 
     while True:
@@ -431,8 +493,18 @@ def add_test_scores():
         prompt()
 
 
-def userlog():
-    def prompt():
+def userlog() -> None:
+    """
+    Allows viewing userlog and clearing it from terminal.
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         print("1 - View user log\n"
               "2 - View log by date\n"
@@ -441,7 +513,12 @@ def userlog():
         print("*"*30)
 
 
-    def fetch_data():
+    def fetch_data() -> list[str]:
+        """
+        Read data from userlog.txt and return list of each line.
+        :return: List where each element is a line/entry in userlog.
+        :rtype: list[str]
+        """
         with open("userlog.txt", "r") as file:
             contents = file.readlines()
             contents = [x[:-1] for x in contents]
@@ -449,7 +526,12 @@ def userlog():
         return contents
 
     
-    def display_logs(log_data):
+    def display_logs(log_data) -> None:
+        """
+        Displays message if log data is empty. If not, displays data by each formatted line.
+        :return: None
+        :rtype: None
+        """
         if not log_data:
             print("NO LOGS TO DISPLAY")
             return None
@@ -522,7 +604,12 @@ def userlog():
         prompt()
 
 
-def view_students():
+def view_students() -> None:
+    """
+    Reads and displays table data from students.csv.
+    :return: None
+    :rtype: None
+    """
     # Fetch data
     contents = []
     with open("references/students.csv", "r") as file:
@@ -540,7 +627,12 @@ def view_students():
     input("PRESS ENTER TO CONTINUE ")
 
 
-def approve_hours():
+def approve_hours() -> None:
+    """
+    Approve request and update hour and mission amounts in correct files.
+    :return: None
+    :rtype: None
+    """
     # Get all requests
     requests = []
     with open("x_mans_files/hour_requests.csv", "r") as file:
@@ -608,7 +700,12 @@ def approve_hours():
     print("Hours updated successfully.")
 
 
-def new_month():
+def new_month() -> None:
+    """
+    Creates new file for month if current month doesn't already have a file.
+    :return: None
+    :rtype: None
+    """
     # Find current month and year
     MONTHS = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}
     current_month = 6
@@ -636,8 +733,18 @@ def new_month():
     input("PRESS ENTER TO CONTINUE ")
 
 
-def send_notif():
-    def prompt():
+def send_notif() -> None:
+    """
+    Allows for sending broadcast or unicast messages to different users.
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         print("1 - Unicast\n" \
               "2 - Broadcast\n" \
@@ -645,7 +752,12 @@ def send_notif():
         print("*"*30)
     
     
-    def unicast():
+    def unicast() -> None:
+        """
+        Sends message to single profile given by user.
+        :return: None
+        :rtype: None
+        """
         users = [x[:-5] for x in listdir("x_mans_files/profiles")]
         
         while True:
@@ -676,7 +788,12 @@ def send_notif():
                 return None
 
 
-    def broadcast():
+    def broadcast() -> None:
+        """
+        Sends message to all existing users.
+        :return: None
+        :rtype: None
+        """
         while True:
             message = input("Enter message for notification: ")
             

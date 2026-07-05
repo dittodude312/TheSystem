@@ -1,6 +1,8 @@
+"""
+    Main file for program with functions for user actions and authentication.
+"""
 # TODO: games?
 # TODO: optimize stuff ig
-# TODO: doc strings
 
 #from os import getenv
 from system_functions import *
@@ -8,7 +10,12 @@ from json import load
 from datetime import datetime, timedelta
 
 
-def fetch_data():
+def fetch_data() -> dict:
+    """
+    Reads username and password data from file and returns dictionary.
+    :return: Dictionary of {username:password} pairs.
+    :rtype: dict
+    """
     try:
         with open("references/users.json", "r") as file:
             contents = load(file)
@@ -21,7 +28,12 @@ def fetch_data():
         return contents 
 
 
-def login():
+def login() -> tuple[str]:
+    """
+    Gets input from user of username and password and returns inputs.
+    :return: Tuple with 2 elements of username input and password input.
+    :rtype: tuple[str]
+    """
     while True:
         username = input("Username: ")
         password = input("Password: ")
@@ -29,7 +41,12 @@ def login():
         else: return username, password
 
 
-def authenticate():
+def authenticate() -> str:
+    """
+    Calls login and fetch_data functions and checks if username and password are pairing in dictionary.
+    :return: Valid username given that password matches in dictionary.
+    :rtype: str
+    """
     print("Welcome to the System. Please enter your credentials.")
 
     while True:
@@ -39,8 +56,20 @@ def authenticate():
         else: print("Incorrect username or password.\n")
 
 
-def start_menu(username):
-    def prompt():
+def start_menu(username:str) -> None:
+    """
+    Prompts and displays options for normal users and calls corresponding function. Calls admin_panel function if username == admin.
+    :param username: Username.
+    :type username: str
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displys options for user and displays Admin Panel option if username == admin.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         print("1 - Grades\n" \
               "2 - Test Scores\n"
@@ -98,8 +127,18 @@ def start_menu(username):
         prompt()
 
 
-def admin_panel():
-    def prompt():
+def admin_panel() -> None:
+    """
+    Displays actions for admin and calls corresponding function.
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displays options for admin.
+        :return: None
+        :retype: None
+        """
         print("*"*30)
         print("1 - Add student\n" \
               "2 - Create new user\n" \
@@ -148,7 +187,16 @@ def admin_panel():
         prompt()
 
 
-def log_user_access(username, start_time):
+def log_user_access(username:str, start_time:datetime) -> None:
+    """
+    Calculates the runtime of the program and saves it to userlog.txt along with username.
+    :param username: Username.
+    :type username: str
+    :param start_time: Time that program began running.
+    :type start_time: datetime.datetime
+    :return: None
+    :rtype: None
+    """
     date = datetime.today()
     date = datetime.strftime(date, "%m/%d/%Y at %H:%M:%S")
     uptime = datetime.now() - start_time
@@ -163,7 +211,12 @@ def log_user_access(username, start_time):
     else: return None
 
 
-def main():
+def main() -> None:
+    """
+    Main file that program execution stems from.
+    :return: None
+    :rtype: None
+    """
     start_time = datetime.now()
     print()
     username = authenticate()
@@ -187,6 +240,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+    
     #menuchoices.supplies("doodpool")
     #admincontrols.userlog()

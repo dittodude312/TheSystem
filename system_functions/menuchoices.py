@@ -1,3 +1,7 @@
+"""
+    File containing functionality for start menu.
+    Availible to all users.
+"""
 from .utilfunctions import to_title_case
 
 from json import load, dump
@@ -5,18 +9,33 @@ from csv import reader, writer
 from os import listdir
 
 
-def grades():
-    def prompt():
+def grades() -> None:
+    """
+    Displays the grades for a student and allows for changing grades.
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
         print(student + " " + "*"*(30 - len(student) - 1))
         for subject, grade in contents.items():
             print(f"{subject:20}---{grade:>5}")
         print("*"*30)
         
         print("1 - Change Grade\n" \
-          "2 - Exit")
+              "2 - Exit")
 
 
-    def change_grade():
+    def change_grade() -> None:
+        """
+        Changes the grade of a class the student takes.
+        :return: None
+        :rtype: None
+        """
         # Get grade and subject
         print()
         while True:
@@ -49,7 +68,6 @@ def grades():
             dump(contents, file)
 
         return None
-
 
     # Get student name
     while True:
@@ -85,10 +103,22 @@ def grades():
                 return None
             case _:
                 print("Invalid input.")
-                
 
-def test_scores():
-    def view_score(index):
+
+def test_scores() -> None:
+    """
+    Allows for viewing different test scores for a specified year.
+    :return: None
+    :rtype: None
+    """
+    def view_score(index:int) -> None:
+        """
+        Displays different test scores from a year depending on index.
+        :param index: Index of 2-d list to get scores.
+        :type index: int
+        :return: None
+        :rtype: None
+        """
         values = []
         print(year + " " + "*"*25)
         for line in contents:
@@ -97,7 +127,6 @@ def test_scores():
         print(f"Average Score Across School: {(sum(values)/len(values)):.2f}")
         print("*"*30)
         input("PRESS ENTER TO CONTINUE ")
-
 
     contents = []
 
@@ -121,10 +150,12 @@ def test_scores():
     # View score category
     while True:
         print()
+        print("*"*30)
         print("1 - Fall Standardized Testing Scores\n" \
               "2 - Spring Standardized Testing Scores\n" \
               "3 - SAT Scores\n" \
               "4 - Exit")
+        print("*"*30)
         
         selection = input("Enter your selection: ")
         match selection:
@@ -139,10 +170,20 @@ def test_scores():
             case _:
                 print("Invalid selection.")
                 continue
-    
 
-def x_mans():
-    def prompt():
+
+def x_mans() -> None:
+    """
+    Allows for viewing different information about X-Mans.
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         print("1 - View mission logs\n" \
               "2 - View X-Mans\n" \
@@ -150,7 +191,12 @@ def x_mans():
         print("*"*30)
     
     
-    def fetch_x_mans():
+    def fetch_x_mans() -> list[str]:
+        """
+        Gets list of X-Mans from x_men_list.csv file.
+        :return: Contents of x_men_list.csv file.
+        :rtype: list[str]
+        """
         contents = []
         with open("x_mans_files/x_men_list.csv", "r") as file:
             _ = reader(file)
@@ -159,7 +205,12 @@ def x_mans():
         return contents
 
 
-    def view_mission_logs():
+    def view_mission_logs() -> None:
+        """
+        Displays logs for specified month from user.
+        :return: None
+        :rtype: None
+        """
         contents = []
 
         # Fetch log data
@@ -190,7 +241,12 @@ def x_mans():
         input("PRESS ENTER TO CONTINUE ")
 
     
-    def view_x_mans():
+    def view_x_mans() -> None:
+        """
+        Displays X-Mans in formatted table.
+        :return: None
+        :rtype: None
+        """
         contents = fetch_x_mans()
 
         print("First Name     |Last Name      |Nickname        ")
@@ -221,8 +277,18 @@ def x_mans():
         prompt()
 
 
-def supplies(username):
-    def order_supplies():
+def supplies(username:str) -> None:
+    """
+    Allows viewing supply inventory and requesting supplies.
+    :return: None
+    :rtype: None
+    """
+    def order_supplies() -> None:
+        """
+        Gets requests from user and writes it to supplyrequests.csv file.
+        :return: None
+        :rtype: None
+        """
         # Get supply options
         supply_options = []
         with open("supplies/supplycosts.csv", "r") as file:
@@ -281,7 +347,18 @@ def supplies(username):
         return None
 
     
-    def write_request(supply_name, requestor, supply_quantity):
+    def write_request(supply_name:str, requestor:str, supply_quantity:int) -> None:
+        """
+        Saves request to supplyrequests.csv file.
+        :param supply_name: Name of supply to request.
+        :type supply_name: str
+        :param requestor: Username of user saving request.
+        :type requestor: str
+        :param supply_quantity: Quantity of supply_name to order.
+        :type supply_quantity: int
+        :return: None
+        :rtype: None
+        """
         try:
             with open("supplies/supplyrequests.csv", "a", newline="") as file:
                 _ = writer(file)
@@ -295,7 +372,12 @@ def supplies(username):
             return None
 
 
-    def prompt():
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         for line in contents:
             print(f"{line[0]:15} | {line[1]:5}")
@@ -303,7 +385,6 @@ def supplies(username):
 
         print("1 - Order Supplies\n" \
               "2 - Exit")
-
 
     # Fetch supply inventory data
     contents = []
@@ -318,9 +399,8 @@ def supplies(username):
         print("An unknown error occurred.")
         exit(1)
     
-
     prompt()
-   
+
    # Get user choice
     while True:
         selection = input("Enter your selection: ")
@@ -336,12 +416,22 @@ def supplies(username):
         prompt()
 
 
-def byclops():
+def byclops() -> None:
+    """
+    Byclops.
+    :return: None
+    :rtype: None
+    """
     print("byclops")
     return None
 
 
-def colossus_victims():
+def colossus_victims() -> None:
+    """
+    Displays Colossus Victims from victims.csv file.
+    :return: None
+    :rtype: None
+    """
     contents = []
     with open("colossus_victims/victims.csv", "r") as file:
         _ = reader(file)
@@ -358,7 +448,14 @@ def colossus_victims():
     input("PRESS ENTER TO CONTINUE ")
 
 
-def log_missions(username):
+def log_missions(username:str) -> None:
+    """
+    Saves request for hours in a given month from user.
+    :param username: User making request.
+    :type username: str
+    :return: None
+    :rtype: None
+    """
     # Get year
     years = [x[-8:-4] for x in listdir("x_mans_files/mission_logs")]
     while True:
@@ -407,8 +504,13 @@ def log_missions(username):
                 return None
 
 
-def profile_manager(username):
-    def prompt():
+def profile_manager(username:str) -> None:
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         print("1 - View Profile\n"
               "2 - Change Password\n"
@@ -417,7 +519,12 @@ def profile_manager(username):
         print("*"*30)
     
 
-    def view_profile():
+    def view_profile() -> None:
+        """
+        Formats and displays data from user's profile file.
+        :return: None
+        :rtype: None 
+        """
         print()
         with open(f"x_mans_files/profiles/{username}.json", "r") as file:
             user_data = load(file)
@@ -432,7 +539,14 @@ def profile_manager(username):
         input("PRESS ENTER TO CONTINUE ")
 
 
-    def change_password(username):
+    def change_password(username: str) -> None:
+        """
+        Allows user to change the password save in users.json file.
+        :param username: User changing their password.
+        :type username: str
+        :return: None
+        :rtype: None
+        """
         # Fetch data
         with open("references/users.json", "r") as file:
             contents = load(file)
@@ -477,7 +591,12 @@ def profile_manager(username):
         input("PRESS ENTER TO CONTINUE ")
 
 
-    def notifications():
+    def notifications() -> None:
+        """
+        Numbers and displays notifications from user's profile file.
+        :return: None
+        :rtype: None
+        """
         print()
         with open(f"x_mans_files/profiles/{username}.json", "r") as file:
             user_data = load(file)
@@ -494,7 +613,6 @@ def profile_manager(username):
         with open(f"x_mans_files/profiles/{username}.json", "w") as file:
             dump(user_data, file)
     
-
     prompt()
     while True:
         selection = input("Enter your selection: ")
