@@ -1,0 +1,4 @@
+system_functions/__pycache__/
+games/__pycache__/
+.venv/
+.env

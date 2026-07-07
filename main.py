@@ -1,10 +1,10 @@
 """
     Main file for program with functions for user actions and authentication.
 """
-# TODO: games?
 # TODO: optimize stuff ig
 
 #from os import getenv
+import games
 from system_functions import *
 from json import load
 from datetime import datetime, timedelta
@@ -54,6 +54,37 @@ def authenticate() -> str:
         contents = fetch_data()
         if username in contents.keys() and password == contents.get(username): return username
         else: print("Incorrect username or password.\n")
+
+
+def game_menu() -> None:
+    """
+    Prompts and displays options for games to play.
+    :return: None
+    :rtype: None
+    """
+    def prompt():
+        print("*"*30)
+        print("1 - Tic Tac Toe\n" \
+              "2 - Russian Roulette\n" \
+              "3 - Exit")
+        print("*"*30)
+
+    prompt()
+    while True:
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                games.tictactoe.main()
+            case "2":
+                games.russianroulette.main()
+            case "3":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        print()
+        prompt()
 
 
 def start_menu(username:str) -> None:
@@ -150,7 +181,8 @@ def admin_panel() -> None:
               "8 - Approve mission hours\n" \
               "9 - Update month entries\n" \
               "10 - Send notifications\n" \
-              "11 - Exit")
+              "11 - Games\n" \
+              "12 - Exit")
         print("*"*30)
     
     prompt()
@@ -179,6 +211,8 @@ def admin_panel() -> None:
             case "10":
                 admincontrols.send_notif()
             case "11":
+                game_menu()
+            case "12":
                 return None
             case _:
                 print("Invalid selection.")
@@ -240,6 +274,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    
+
     #menuchoices.supplies("doodpool")
     #admincontrols.userlog()
