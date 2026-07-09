@@ -2,6 +2,7 @@
     File containing functionality for managing school classes.
     Only availible for admin user.
 """
+
 from .utilfunctions import *
 
 from os import listdir

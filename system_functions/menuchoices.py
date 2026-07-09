@@ -2,11 +2,13 @@
     File containing functionality for start menu.
     Availible to all users.
 """
-from .utilfunctions import to_title_case
 
+from .utilfunctions import to_title_case, encrypt, decrypt
+
+from dotenv import load_dotenv
 from json import load, dump
 from csv import reader, writer
-from os import listdir
+from os import listdir, getenv
 
 
 def grades() -> None:
@@ -513,11 +515,11 @@ def profile_manager(username:str) -> None:
         """
         print("*"*30)
         print("1 - View Profile\n"
-              "2 - Change Password\n"
-              "3 - Notifications\n"
+              "2 - Notifications\n"
+              "3 - Change Password\n"
               "4 - Exit")
         print("*"*30)
-    
+
 
     def view_profile() -> None:
         """
@@ -536,58 +538,6 @@ def profile_manager(username:str) -> None:
         tmp = len(user_data["Notifications"])
         print(f"NOTIFICATIONS          : {"No notifications" if tmp == 0 else str(tmp) + " notifications"}")
         print("="*35)
-        input("PRESS ENTER TO CONTINUE ")
-
-
-    def change_password(username: str) -> None:
-        """
-        Allows user to change the password save in users.json file.
-        :param username: User changing their password.
-        :type username: str
-        :return: None
-        :rtype: None
-        """
-        # Fetch data
-        with open("references/users.json", "r") as file:
-            contents = load(file)
-        
-        # Get old password
-        print("Enter your current password to proceed.")
-        while True:
-            old_password = input("Password: ")
-            if old_password.lower() == "q" or old_password.lower() == "quit":
-                return None
-
-            if old_password != contents[username]:
-                print("Password incorrect.")
-                continue
-            else: break
-
-        # Get new password
-        print()
-        while True:
-            new_password = input("Enter your new password: ")
-            if new_password.lower() == "q" or new_password.lower() == "quit":
-                return None
-
-            if not new_password:
-                print("Field cannot be empty.")
-                continue
-
-            if new_password == old_password:
-                print("New password cannot be the same as old password.")
-                continue
-            
-            print()
-            if input("Confirm password: ") == new_password: break
-        
-        # Save new password
-        contents.update({username:new_password})
-
-        with open("references/users.json", "w") as file:
-            dump(contents, file)
-        
-        print("\nPassword updated.")
         input("PRESS ENTER TO CONTINUE ")
 
 
@@ -612,7 +562,66 @@ def profile_manager(username:str) -> None:
         user_data["Notifications"] = []
         with open(f"x_mans_files/profiles/{username}.json", "w") as file:
             dump(user_data, file)
-    
+
+
+    def change_password(username: str) -> None:
+        """
+        Allows user to change the password save in users.json file.
+        :param username: User changing their password.
+        :type username: str
+        :return: None
+        :rtype: None
+        """
+        # Fetch data
+        load_dotenv()
+        key = getenv("KEY").split(",")
+        with open("references/users.json", "r") as file:
+            contents = load(file)
+        
+        # Get old password
+        print("Enter your current password to proceed.")
+        while True:
+            old_password = input("Password: ")
+            if old_password.lower() == "q" or old_password.lower() == "quit":
+                return None
+
+            if old_password != decrypt(contents[username], key):
+                print("Password incorrect.")
+                continue
+            else: break
+
+        # Get new password
+        print()
+        while True:
+            new_password = input("Enter your new password: ")
+            if new_password.lower() == "q" or new_password.lower() == "quit":
+                return None
+
+            if not new_password:
+                print("Field cannot be empty.")
+                continue
+
+            if new_password == old_password:
+                print("New password cannot be the same as old password.")
+                continue
+
+            if not new_password.isalnum():
+                print("Password must be alphanumeric only.")
+                continue
+            
+            print()
+            if input("Confirm password: ") == new_password: break
+        
+        # Save new password
+        new_password = encrypt(new_password, key)
+        contents.update({username:new_password})
+
+        with open("references/users.json", "w") as file:
+            dump(contents, file)
+        
+        print("\nPassword updated.")
+        input("PRESS ENTER TO CONTINUE ")
+
     prompt()
     while True:
         selection = input("Enter your selection: ")
@@ -621,9 +630,9 @@ def profile_manager(username:str) -> None:
             case "1":
                 view_profile()
             case "2":
-                change_password(username)
-            case "3":
                 notifications()
+            case "3":
+                change_password(username)
             case "4":
                 return None
             case _:

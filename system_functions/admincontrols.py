@@ -5,10 +5,11 @@
 
 from .utilfunctions import *
 
+from dotenv import load_dotenv
 from json import dump, load
 from csv import reader, writer
 from random import randint
-from os import listdir
+from os import listdir, getenv
 from datetime import datetime
 
 
@@ -198,7 +199,16 @@ def new_user() -> None:
     for _ in range(4):
         password += str(randint(0,9))
     
+    with open("x_mans_files/profiles/admin.json", "r") as file:
+        admin_data = load(file)
+        admin_data["Notifications"].append(f"{nick_name}'s password is {password}.")
+    with open("x_mans_files/profiles/admin.json", "w") as file:
+        dump(admin_data, file)
+    
     # Save username and password
+    load_dotenv()
+    key = getenv("KEY").split(",")
+    password = encrypt(password, key)
     contents.update({new_username:password})
     with open("references/users.json", "w") as file:
         dump(contents, file)
@@ -214,7 +224,9 @@ def new_user() -> None:
     with open(f"x_mans_files/profiles/{new_username}.json", "w") as file:
         dump({"Username": new_username, "First Name": first_name, "Last Name": last_name,
               "Nickname": nick_name, "Monthly Hours": "", "Monthly Mission Count": "",
-              "All Time Hours": 0, "All Time Missions": 0, "Notifications": []}, file)
+              "All Time Hours": 0, "All Time Missions": 0, "Notifications": ["Welcome to The System."]}, file)
+    
+    print("User created successfully.")
 
 
 def approve_supply_requests() -> None:
@@ -695,7 +707,7 @@ def approve_hours() -> None:
         _ = writer(file)
         _.writerows(all_entries)
 
-    unicast_notif(profile_data["Nickname"], f"Your request for {to_approve[1]} hours was approved.")
+    unicast_notif(profile_data["Username"], f"Your request for {to_approve[1]} hours was approved.")
     
     print("Hours updated successfully.")
 

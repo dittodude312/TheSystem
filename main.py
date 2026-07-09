@@ -1,59 +1,13 @@
 """
     Main file for program with functions for user actions and authentication.
-"""
-# TODO: optimize stuff ig
 
-#from os import getenv
+"""
+
 import games
+from dotenv import load_dotenv
 from system_functions import *
 from json import load
 from datetime import datetime, timedelta
-
-
-def fetch_data() -> dict:
-    """
-    Reads username and password data from file and returns dictionary.
-    :return: Dictionary of {username:password} pairs.
-    :rtype: dict
-    """
-    try:
-        with open("references/users.json", "r") as file:
-            contents = load(file)
-    except FileNotFoundError:
-        print("Failed to fetch user data. Terminating Session.")
-        print("If issue persists, please contact admin.")
-        print("Tip - Make sure you are using TheSystem directory when executing main.py.")
-        exit(1)
-    else:
-        return contents 
-
-
-def login() -> tuple[str]:
-    """
-    Gets input from user of username and password and returns inputs.
-    :return: Tuple with 2 elements of username input and password input.
-    :rtype: tuple[str]
-    """
-    while True:
-        username = input("Username: ")
-        password = input("Password: ")
-        if not username or not password: print("Username or password fields cannot be blank.")
-        else: return username, password
-
-
-def authenticate() -> str:
-    """
-    Calls login and fetch_data functions and checks if username and password are pairing in dictionary.
-    :return: Valid username given that password matches in dictionary.
-    :rtype: str
-    """
-    print("Welcome to the System. Please enter your credentials.")
-
-    while True:
-        username, password = login()
-        contents = fetch_data()
-        if username in contents.keys() and password == contents.get(username): return username
-        else: print("Incorrect username or password.\n")
 
 
 def game_menu() -> None:
@@ -251,9 +205,9 @@ def main() -> None:
     :return: None
     :rtype: None
     """
-    start_time = datetime.now()
     print()
-    username = authenticate()
+    start_time = datetime.now()
+    username = authenticate.main()
 
     with open(f"x_mans_files/profiles/{username}.json", "r") as file:
         notifications = len(load(file)["Notifications"])
@@ -273,6 +227,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    load_dotenv()
     main()
 
     #menuchoices.supplies("doodpool")

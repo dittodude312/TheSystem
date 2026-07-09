@@ -1,6 +1,7 @@
 """
     File containing general use functions used by other modules in package.
 """
+
 CATEGORIES:dict = {"Art & Music":"artmusic", "Computer Science":"compscience", "Electives":"elective", 
                    "History":"history", "World Languages":"language", "Math":"math", "Reading":"reading",
                    "Sciences":"sciences"}
@@ -95,6 +96,41 @@ def change_key(dictionary:dict, old_key:str, new_key:str) -> dict:
         new_dict.update({keys[i]:values[i]})
     
     return new_dict
+
+
+def encrypt(plaintext:str, key:list[str]) -> str:
+    """
+    Encrypts plaintext based on shuffled key.
+    :param plaintext: Plain text.
+    :type plaintext: str
+    :param key: Key shuffled from character list.
+    :type key: list[str]
+    :return: Encrypted string.
+    :rtype: str
+    """
+    chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    ciphertext = ""
+    for char in [key[chars.index(x)] for x in plaintext]: ciphertext += char
+    return ciphertext
+
+
+def decrypt(ciphertext:str, key:list[str]) -> str:
+    """
+    Decrypts ciphertext based on shuffled key.
+    :param ciphertext: Text ciphered according to key.
+    :type ciphertext: str
+    :param key: Key shuffled from character list.
+    :type key: list[str]
+    :return: Decrypted string.
+    :rtype: str
+    """
+    chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    plaintext = ""
+    for char in [chars[key.index(x)] for x in ciphertext]:
+        plaintext += char
+    return plaintext
 
 
 if __name__ == "__main__":
