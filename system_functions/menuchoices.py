@@ -3,12 +3,7 @@
     Availible to all users.
 """
 
-from .utilfunctions import to_title_case, encrypt, decrypt
-
-from dotenv import load_dotenv
-from json import load, dump
-from csv import reader, writer
-from os import listdir, getenv
+from .utilfunctions import *
 
 
 def grades() -> None:
@@ -527,6 +522,7 @@ def profile_manager(username:str) -> None:
         :return: None
         :rtype: None 
         """
+        update_user_month_data(username)
         print()
         with open(f"x_mans_files/profiles/{username}.json", "r") as file:
             user_data = load(file)

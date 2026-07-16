@@ -1,6 +1,14 @@
 """
     File containing general use functions used by other modules in package.
+    Additionally imports other functions from built-in modules to be used by other modules.
 """
+
+from json import load, dump
+from csv import reader, writer
+from os import listdir, getenv
+from dotenv import load_dotenv
+from datetime import datetime
+
 
 CATEGORIES:dict = {"Art & Music":"artmusic", "Computer Science":"compscience", "Electives":"elective", 
                    "History":"history", "World Languages":"language", "Math":"math", "Reading":"reading",
@@ -38,26 +46,9 @@ def to_title_case(string:str) -> str:
     :type string: str
     """
     if not string: return ""
-
-    stop = 0
-    words = []
-    space_number = 0
-    string = string.strip()
-    string = string[:-1] if string[len(string) - 1] == "." else string
-
-    for char in string:
-        if char == " ": space_number += 1
     
-    string += " "
+    words = [x.lower().capitalize() for x in string.strip().split(" ")]
 
-    for _ in range(space_number + 1):
-        stop = string.index(" ")
-        word = string[:stop]
-
-        string = string[stop + 1:]
-        words.append(word)
-    
-    words = [x.lower().capitalize() for x in words]
     for element in words:
         if element.lower() == "ii" or element.lower() == "iii":
             words[words.index(element)] = element.upper()
@@ -67,8 +58,7 @@ def to_title_case(string:str) -> str:
         words[words.index(element)] = element.upper() if "/" in element else element
     string = ""
 
-    for element in words:
-        string += (element + " ")
+    for element in words: string += (element + " ")
 
     return string.strip()
 
@@ -131,6 +121,39 @@ def decrypt(ciphertext:str, key:list[str]) -> str:
     for char in [chars[key.index(x)] for x in ciphertext]:
         plaintext += char
     return plaintext
+
+
+def update_user_month_data(username:str) -> None:
+    """
+    Updates the mission count and hour count in profile file of given username for the current month. 
+    :param username: Username of person to update profile.
+    :type username: str
+    :return: None
+    :rtype: None
+    """
+    # Get first name
+    start_time = datetime.now()
+    with open("x_mans_files/x_men_list.csv", "r") as file:
+        _ = reader(file)
+        for entry in _:
+            if entry[3] == username: first_name = entry[0]
+
+    # Get mission count and hour data for current month
+    month = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}[start_time.month]
+    with open(f"x_mans_files/mission_logs/{start_time.year}logs/xmans{month}{start_time.year}.csv", "r") as file:
+        _ = reader(file)
+        for line in _: 
+            if line[0] == first_name: hour_data = line
+    
+    # Update profile file
+    with open(f"x_mans_files/profiles/{username}.json", "r") as file:
+        user_data = load(file)
+
+    user_data["Monthly Hours"] = int(hour_data[4])
+    user_data["Monthly Mission Count"] = int(hour_data[3])
+
+    with open(f"x_mans_files/profiles/{username}.json", "w") as file:
+        dump(user_data, file)
 
 
 if __name__ == "__main__":

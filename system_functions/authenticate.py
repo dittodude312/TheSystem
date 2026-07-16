@@ -2,11 +2,7 @@
     File containing functionality for users logging in.
 """
 
-from .utilfunctions import decrypt
-
-from json import load
-from dotenv import load_dotenv
-from os import getenv
+from .utilfunctions import *
 
 
 def fetch_data() -> dict:

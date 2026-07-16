@@ -1,11 +1,19 @@
 """
-    Main file for program with functions for user actions and authentication.
-
+    Main file for program using system_functions package. Contains functions for accessing system functionality.
 """
 
+try: from dotenv import load_dotenv
+except ModuleNotFoundError:
+    print("The System is missing python-dotenv dependency.")
+    print("Try running [py -m pip install python-dotenv].")
+    exit(1)
+try: import system_functions
+except ModuleNotFoundError:
+    print("The System is missing functionality package.")
+    exit(1)
+
 import games
-from dotenv import load_dotenv
-from system_functions import *
+
 from json import load
 from datetime import datetime, timedelta
 
@@ -16,7 +24,12 @@ def game_menu() -> None:
     :return: None
     :rtype: None
     """
-    def prompt():
+    def prompt() -> None:
+        """
+        Displays games for user to play.
+        :return: None
+        :rtype: None
+        """
         print("*"*30)
         print("1 - Tic Tac Toe\n" \
               "2 - Russian Roulette\n" \
@@ -27,12 +40,9 @@ def game_menu() -> None:
     while True:
         selection = input("Enter your selection: ")
         match selection:
-            case "1":
-                games.tictactoe.main()
-            case "2":
-                games.russianroulette.main()
-            case "3":
-                return None
+            case "1": games.tictactoe.main()
+            case "2": games.russianroulette.main()
+            case "3": return None
             case _:
                 print("Invalid selection.")
                 continue
@@ -79,22 +89,14 @@ def start_menu(username:str) -> None:
         selection = input("Enter your selection: ")
         print("_"*30)
         match selection:
-            case "1":
-                menuchoices.grades()
-            case "2":
-                menuchoices.test_scores()
-            case "3":
-                menuchoices.x_mans()
-            case "4":
-                menuchoices.supplies(username)
-            case "5":
-                menuchoices.byclops()
-            case "6":
-                menuchoices.colossus_victims()
-            case "7":
-                menuchoices.log_missions(username)
-            case "8":
-                menuchoices.profile_manager(username)
+            case "1": system_functions.menuchoices.grades()
+            case "2": system_functions.menuchoices.test_scores()
+            case "3": system_functions.menuchoices.x_mans()
+            case "4": system_functions.menuchoices.supplies(username)
+            case "5": system_functions.menuchoices.byclops()
+            case "6": system_functions.menuchoices.colossus_victims()
+            case "7": system_functions.menuchoices.log_missions(username)
+            case "8": system_functions.menuchoices.profile_manager(username)
             case "9":
                 if username == "admin":
                     print("Initializing admin panel...")
@@ -144,30 +146,18 @@ def admin_panel() -> None:
         selection = input("Enter your selection: ")
         print("_"*30)
         match selection:
-            case "1":
-                admincontrols.new_student()
-            case "2":
-                admincontrols.new_user()
-            case "3":
-                subjects.main()
-            case "4":
-                admincontrols.approve_supply_requests()
-            case "5":
-                admincontrols.add_test_scores()
-            case "6":
-                admincontrols.userlog()
-            case "7":
-                admincontrols.view_students()
-            case "8":
-                admincontrols.approve_hours()
-            case "9":
-                admincontrols.new_month()
-            case "10":
-                admincontrols.send_notif()
-            case "11":
-                game_menu()
-            case "12":
-                return None
+            case "1": system_functions.admincontrols.new_student()
+            case "2": system_functions.admincontrols.new_user()
+            case "3": system_functions.subjects.main()
+            case "4": system_functions.admincontrols.approve_supply_requests()
+            case "5": system_functions.admincontrols.add_test_scores()
+            case "6": system_functions.admincontrols.userlog()
+            case "7": system_functions.admincontrols.view_students()
+            case "8": system_functions.admincontrols.approve_hours()
+            case "9": system_functions.admincontrols.new_month()
+            case "10": system_functions.admincontrols.send_notif()
+            case "11": game_menu()
+            case "12": return None
             case _:
                 print("Invalid selection.")
                 continue
@@ -205,30 +195,29 @@ def main() -> None:
     :return: None
     :rtype: None
     """
-    print()
+    print("="*35)
     start_time = datetime.now()
-    username = authenticate.main()
+    username = system_functions.authenticate.main()
 
     with open(f"x_mans_files/profiles/{username}.json", "r") as file:
-        notifications = len(load(file)["Notifications"])
+        notifications_number = len(load(file)["Notifications"])    
 
     print("-"*30)
     print(f"Logged in successfully. Welcome {username}.")
-    print(f"You have {notifications} notifications.")
-    print("-"*30)
+    print(f"You have {notifications_number} notifications.")
+    input("-"*30 + " ")
 
     start_menu(username)
 
     print("Thank you for using the System.\n" \
           "Terminating Session...")
-    print()
 
     log_user_access(username, start_time)
+    print("="*35)
 
 
 if __name__ == "__main__":
     load_dotenv()
+    print()
     main()
-
-    #menuchoices.supplies("doodpool")
-    #admincontrols.userlog()
+    print()

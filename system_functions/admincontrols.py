@@ -5,12 +5,7 @@
 
 from .utilfunctions import *
 
-from dotenv import load_dotenv
-from json import dump, load
-from csv import reader, writer
 from random import randint
-from os import listdir, getenv
-from datetime import datetime
 
 
 def unicast_notif(recipient:str, message:str) -> None:
@@ -546,7 +541,6 @@ def userlog() -> None:
         """
         if not log_data:
             print("NO LOGS TO DISPLAY")
-            return None
         
         for index, line in enumerate(log_data):
             print(f"[{index + 1}] {line}")
@@ -720,7 +714,7 @@ def new_month() -> None:
     """
     # Find current month and year
     MONTHS = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}
-    current_month = 6
+    current_month = datetime.today().month
     current_month = MONTHS[current_month]
     current_year = datetime.today().year
 
