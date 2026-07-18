@@ -2,8 +2,6 @@
     Main file for program using system_functions package. Contains functions for accessing system functionality.
 """
 
-# TODO: delete supply and hour request without approving them
-
 try: from dotenv import load_dotenv
 except ModuleNotFoundError:
     print("The System is missing python-dotenv dependency.")

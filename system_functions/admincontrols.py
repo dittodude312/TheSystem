@@ -226,110 +226,210 @@ def new_user() -> None:
 
 def approve_supply_requests() -> None:
     """
-    Moves approved request to orders file.
+    Allows for approving or denying supply requests.
     :return: None
     :rtype: None
     """
-    requests = []
-    items = []
-    costs = []
-    with open("references/schoolbudget.txt", "r") as file: budget = float(file.read())
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
+        print("*"*30)
+        print("1 - Approve request\n" \
+              "2 - Remove request\n" \
+              "3 - Exit")
+        print("*"*30)
 
-    # Display current budget
-    print(f"The current school budget is: ${budget:,.2f}")
-    input("PRESS ENTER TO CONTINUE ")
-    print()
-    
-    # Fetch and display all requests
-    with open("supplies/supplyrequests.csv", "r") as file:
-        _ = reader(file)
-        requests = [x for x in _]
-        requests = list(enumerate(requests[1:]))
 
-    print("   |Username       |Supply              |Quantity")
-    print("---+---------------+--------------------+-----------")
-    for index, line in requests: 
-        print(f"{index + 1:3}|{line[0]:15}|{line[1]:20}|{line[2]:>11}")
+    def display_requests(request_list) -> None:
+        """
+        Displays request list in table.
+        :param request_list: Numbered tuple of requests where tuple[1] is request.
+        :type request_list: tuple[int, list[str]]
+        :return: None
+        :rtype: None
+        """
+        if not request_list:
+            print("NO REQUESTS TO DISPLAY")
+            input("PRESS ENTER TO CONTINUE ")
+            return None
+        print("   |Username       |Supply              |Quantity")
+        print("---+---------------+--------------------+-----------")
+        for index, line in request_list: 
+            print(f"{index + 1:3}|{line[0]:15}|{line[1]:20}|{line[2]:>11}")
 
-    # Get valid request to approve
-    while True:
-        try:
-            approve = input("Enter the request number to approve: ")
 
-            if approve.lower() == "q" or approve.lower() == "quit":
-                return None
-            
-            approve = int(approve)
+    def fetch_requests() -> None:
+        """
+        Gets requst data and returns as numbered list.
+        :return: None
+        :rtype: None
+        """
+        with open("supplies/supplyrequests.csv", "r") as file:
+            _ = reader(file)
+            requests = [x for x in _]
+            requests = list(enumerate(requests[1:]))
+        return requests
 
-            if approve <= 0 or approve > len(requests):
-                print("Invalid input.")
-                continue
-            else:
-                request = requests[approve - 1][1]
-                print(f"The request is: {request[2]} {request[1]} from {request[0]}.")
-                confirm = input("Are you sure you want to approve the supply request: ")
-                if confirm.lower() == "y" or confirm.lower() == "yes":
-                    break
-                else: continue
-        except ValueError:
-            print("Invalid input.")
-            continue
 
-    # Get list of items and their costs
-    with open("supplies/supplycosts.csv", "r") as file:
-        _ = reader(file)
-        for line in _: 
-            items.append(line[0])
-            costs.append(line[1])
-        items.remove(items[0])
-        costs.remove(costs[0])
+    def approve_request() -> None:
+        """
+        Moves request to orders file.
+        :return: None
+        :rtype: None
+        """
+        requests = []
+        items = []
+        costs = []
+        with open("references/schoolbudget.txt", "r") as file: budget = float(file.read())
 
-    # Get price of the order
-    if request[1] in items:
-        order_cost = float(costs[items.index(request[1])])
-        order_cost *= int(request[2])
-    else:
-        print("Request is custom made. Price could not be found.")
+        # Display current budget
+        print(f"The current school budget is: ${budget:,.2f}")
+        input("PRESS ENTER TO CONTINUE ")
+        print()
+        
+        # Fetch and display all requests
+        requests = fetch_requests()
+        display_requests(requests)
+        if not requests: return None
+
+        # Get valid request to approve
         while True:
             try:
-                order_cost = float(input("Enter the cost of the order: "))
+                approve = input("Enter the request number to approve: ")
+
+                if approve.lower() == "q" or approve.lower() == "quit":
+                    return None
+                
+                approve = int(approve)
+
+                if approve <= 0 or approve > len(requests):
+                    print("Invalid input.")
+                    continue
+                else:
+                    request = requests[approve - 1][1]
+                    print(f"The request is: {request[2]} {request[1]} from {request[0]}.")
+                    confirm = input("Are you sure you want to approve the supply request: ")
+                    if confirm.lower() == "y" or confirm.lower() == "yes":
+                        break
+                    else: continue
             except ValueError:
-                print("Invalid input")
+                print("Invalid input.")
                 continue
-            else: break
-    
-    # Bankruptcy check
-    budget -= order_cost
-    if budget < 0:
-        print("Insufficient funds to complete the order. Cancelling approval...")
+
+        # Get list of items and their costs
+        with open("supplies/supplycosts.csv", "r") as file:
+            _ = reader(file)
+            for line in _: 
+                items.append(line[0])
+                costs.append(line[1])
+            items.remove(items[0])
+            costs.remove(costs[0])
+
+        # Get price of the order
+        if request[1] in items:
+            order_cost = float(costs[items.index(request[1])])
+            order_cost *= int(request[2])
+        else:
+            print("Request is custom made. Price could not be found.")
+            while True:
+                try:
+                    order_cost = float(input("Enter the cost of the order: "))
+                except ValueError:
+                    print("Invalid input")
+                    continue
+                else: break
+        
+        # Bankruptcy check
+        budget -= order_cost
+        if budget < 0:
+            print("Insufficient funds to complete the order. Cancelling approval...")
+            return None
+
+        print()
+        print(f"The cost of the order will be: {order_cost:,.2f}")
+        print(f"The remaining money in budget is {budget}")
+
+        # Update budget
+        with open("references/schoolbudget.txt", "w") as file:
+            file.write(f"{budget:.2f}")
+        
+        # Update requests
+        requests = [x[1] for x in requests]
+        requests.remove(request)
+        with open("supplies/supplyrequests.csv", "w", newline="") as file:
+            _ = writer(file)
+            _.writerow(["Username", "Supply", "Quantity"])
+            _.writerows(requests)
+        
+        # Add order to orders file
+        request.append(f"{order_cost:.2f}")
+        with open("supplies/supplyorders.csv", "a", newline="") as file:
+            _ = writer(file)
+            _.writerow(request)
+
+        unicast_notif(request[0], f"Your request for {request[2]} {request[1]} was approved.")
+
+        print("\nOrder placed successfully.")
         return None
-
-    print()
-    print(f"The cost of the order will be: {order_cost:,.2f}")
-    print(f"The remaining money in budget is {budget}")
-
-    # Update budget
-    with open("references/schoolbudget.txt", "w") as file:
-        file.write(f"{budget:.2f}")
     
-    # Update requests
-    requests = [x[1] for x in requests]
-    requests.remove(request)
-    with open("supplies/supplyrequests.csv", "w", newline="") as file:
-        _ = writer(file)
-        _.writerow(["Username", "Supply", "Quantity"])
-        _.writerows(requests)
-    
-    # Add order to orders file
-    request.append(f"{order_cost:.2f}")
-    with open("supplies/supplyorders.csv", "a", newline="") as file:
-        _ = writer(file)
-        _.writerow(request)
 
-    unicast_notif(request[0], f"Your request for {request[2]} {request[1]} was approved.")
+    def remove_request() -> None:
+        """
+        Removes request from supplyrequests.csv file.
+        :return: None
+        :rtype: None
+        """
+        requests = fetch_requests()
+        display_requests(requests)
+        if not requests: return None
 
-    print("\nOrder placed successfully.")
-    return None
+        while True:
+            # Get request index
+            remove_index = input("Enter request number to remove: ")
+            if remove_index.lower() == "q" or remove_index.lower() == "quit": return None
+
+            if not remove_index.isdigit():
+                print("Invalid input.")
+                continue
+
+            remove_index = int(remove_index)
+            if remove_index <= 0 or remove_index > len(requests):
+                print("Index out of range.")
+                continue
+            
+            # Remove request and save changed data
+            to_remove = requests[remove_index - 1]
+            requests.remove(to_remove)
+            requests = [x[1] for x in requests]
+            requests.insert(0, ["Username", "Supply", "Quantity"])
+
+            with open("supplies/supplyrequests.csv", "w", newline="") as file:
+                _ = writer(file)
+                _.writerows(requests)
+
+            unicast_notif(to_remove[1][0], f"Your request for {to_remove[1][2]} {to_remove[1][1]} was denied.")
+            
+            print("Request removed successfully.")
+            return None
+
+    prompt()
+    while True:
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                approve_request()
+            case "2":
+                remove_request()
+            case "3":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
 
 
 def add_test_scores() -> None:
@@ -639,71 +739,163 @@ def approve_hours() -> None:
     :return: None
     :rtype: None
     """
-    # Get all requests
-    requests = []
-    with open("x_mans_files/hour_requests.csv", "r") as file:
-        _ = reader(file)
-        for line in _: requests.append(line)
-        requests.remove(requests[0])
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
+        print("*"*30)
+        print("1 - Approve request\n" \
+              "2 - Remove request\n" \
+              "3 - Exit")
+        print("*"*30)
 
-    for index, line in enumerate(requests):
-        print(f"[{index + 1}] {(line[0] + ":"):15} {line[1]:2} hour(s) for {line[2]}, {line[3]}")
+
+    def approve_request() -> None:
+        """
+        Approves hour request from hour_requests.csv file and updates appropriate information.
+        :return: None
+        :rtype: None
+        """
+        # Fetch all requests
+        requests = []
+        with open("x_mans_files/hour_requests.csv", "r") as file:
+            _ = reader(file)
+            for line in _: requests.append(line)
+            requests.remove(requests[0])
+
+        if not requests:
+            print("NO REQUESTS TO REVIEW")
+            input("PRESS ENTER TO CONTINUE ")
+            return None
     
-    # Get request to approve
-    tmp = range(1, len(requests) + 1)
-    while True:
-        try:
-            to_approve = input("Enter request number to approve: ")
-
-            if to_approve.lower() == "q" or to_approve.lower() == "quit":
-                return None
-            
-            if int(to_approve) not in tmp:
-                print("Request number out of range.")
-                continue
-        except ValueError:
-            print("Invalid input.")
-            continue
-        else: break
-
-    to_approve = requests[int(to_approve) - 1]
-    del tmp
-
-    # Remove request from requests list
-    requests.remove(to_approve)
-    requests.insert(0, ["Username", "HoursRequested", "MissionMonth", "MissionYear"])
-    with open("x_mans_files/hour_requests.csv", "w", newline="") as file:
-        _ = writer(file)
-        _.writerows(requests)
-    
-    # Update requestor's profile
-    with open(f"x_mans_files/profiles/{to_approve[0]}.json", "r") as file:
-        profile_data = load(file)
-    profile_data.update({"All Time Hours": profile_data["All Time Hours"] + int(to_approve[1])})
-    profile_data.update({"All Time Missions": profile_data["All Time Missions"] + 1})
-    with open(f"x_mans_files/profiles/{to_approve[0]}.json", "w") as file:
-        dump(profile_data, file)
+        for index, line in enumerate(requests):
+            print(f"[{index + 1}] {(line[0] + ":"):15} {line[1]:2} hour(s) for {line[2]}, {line[3]}")
         
-    # Update monthly entry for requestor
-    all_entries = []
-    with open(f"x_mans_files/mission_logs/{to_approve[3]}logs/xmans{to_approve[2]}{to_approve[3]}.csv", "r") as file:
-        _ = reader(file)
-        for line in _: all_entries.append(line)
-        all_entries.remove(all_entries[0])
-    
-    for line in all_entries:
-        if line[2] == profile_data["Nickname"]:
-            line[3] = str(int(line[3]) + 1)
-            line[4] = str(int(line[4]) + int(to_approve[1]))
-    
-    all_entries.insert(0, ["FirstName", "LastName", "Nickname", "MissionCount", "HoursLogged"])
-    with open(f"x_mans_files/mission_logs/{to_approve[3]}logs/xmans{to_approve[2]}{to_approve[3]}.csv", "w", newline="") as file:
-        _ = writer(file)
-        _.writerows(all_entries)
+        # Get request to approve
+        tmp = range(1, len(requests) + 1)
+        while True:
+            try:
+                to_approve = input("Enter request number to approve: ")
 
-    unicast_notif(profile_data["Username"], f"Your request for {to_approve[1]} hours was approved.")
+                if to_approve.lower() == "q" or to_approve.lower() == "quit":
+                    return None
+                
+                if int(to_approve) not in tmp:
+                    print("Request number out of range.")
+                    continue
+            except ValueError:
+                print("Invalid input.")
+                continue
+            else: break
+
+        to_approve = requests[int(to_approve) - 1]
+        del tmp
+
+        # Remove request from requests list
+        requests.remove(to_approve)
+        requests.insert(0, ["Username", "HoursRequested", "MissionMonth", "MissionYear"])
+        with open("x_mans_files/hour_requests.csv", "w", newline="") as file:
+            _ = writer(file)
+            _.writerows(requests)
+        
+        # Update requestor's profile
+        with open(f"x_mans_files/profiles/{to_approve[0]}.json", "r") as file:
+            profile_data = load(file)
+        profile_data.update({"All Time Hours": profile_data["All Time Hours"] + int(to_approve[1])})
+        profile_data.update({"All Time Missions": profile_data["All Time Missions"] + 1})
+        with open(f"x_mans_files/profiles/{to_approve[0]}.json", "w") as file:
+            dump(profile_data, file)
+            
+        # Update monthly entry for requestor
+        all_entries = []
+        with open(f"x_mans_files/mission_logs/{to_approve[3]}logs/xmans{to_approve[2]}{to_approve[3]}.csv", "r") as file:
+            _ = reader(file)
+            for line in _: all_entries.append(line)
+            all_entries.remove(all_entries[0])
+        
+        for line in all_entries:
+            if line[2] == profile_data["Nickname"]:
+                line[3] = str(int(line[3]) + 1)
+                line[4] = str(int(line[4]) + int(to_approve[1]))
+        
+        all_entries.insert(0, ["FirstName", "LastName", "Nickname", "MissionCount", "HoursLogged"])
+        with open(f"x_mans_files/mission_logs/{to_approve[3]}logs/xmans{to_approve[2]}{to_approve[3]}.csv", "w", newline="") as file:
+            _ = writer(file)
+            _.writerows(all_entries)
+
+        unicast_notif(profile_data["Username"], f"Your request for {to_approve[1]} hours was approved.")
+        
+        print("Hours updated successfully.")
+
+
+    def remove_request() -> None:
+        """
+        Removes request from hour_requests.csv file.
+        :return: None
+        :rtype: None
+        """
+        # Fetch all requests
+        requests = []
+        with open("x_mans_files/hour_requests.csv", "r") as file:
+            _ = reader(file)
+            for line in _: requests.append(line)
+            requests.remove(requests[0])
+
+        if not requests:
+            print("NO REQUESTS TO REVIEW")
+            input("PRESS ENTER TO CONTINUE ")
+            return None
     
-    print("Hours updated successfully.")
+        for index, line in enumerate(requests):
+            print(f"[{index + 1}] {(line[0] + ":"):15} {line[1]:2} hour(s) for {line[2]}, {line[3]}")
+        
+        # Get request to remove
+        while True:
+            remove_index = input("Enter request number to remove: ")
+
+            if remove_index.lower() == "q" or remove_index.lower() == "quit": return None
+
+            if not remove_index.isdigit():
+                print("Invalid input.")
+                continue
+            
+            remove_index = int(remove_index)
+            if remove_index <= 0 or remove_index > len(requests):
+                print("Index out of range.")
+                continue
+            break
+        
+        # Update requests
+        to_remove = requests[remove_index - 1]
+        requests.remove(to_remove)
+        requests.insert(0, ["Username", "HoursRequested", "MissionMonth", "MissionYear"])
+
+        # Save requests data
+        with open("x_mans_files/hour_requests.csv", "w", newline="") as file:
+            _ = writer(file)
+            _.writerows(requests)
+        
+        unicast_notif(to_remove[0], f"Your request for {to_remove[1]} hours was denied.")
+
+        print("Request removed successfully.")
+
+    prompt()
+    while True:
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                approve_request()
+            case "2":
+                remove_request()
+            case "3":
+                return None
+            case _:
+                print("Invalid selection.")
+                continue
+        print()
+        prompt()
 
 
 def new_month() -> None:
