@@ -441,8 +441,61 @@ def colossus_victims() -> None:
     for line in contents:
         print(f"{line[0]:15}|{line[1]:15}|{line[2]} | {line[3]}")
     print("---------------+---------------+-----------+-------------------------------------")
-
     input("PRESS ENTER TO CONTINUE ")
+
+
+def colossus_reporting() -> None:
+    """
+    Gets information about Colossus attack and saves it to reports.csv file.
+    :return: None
+    :rtype: None
+    """
+    while True:
+        # Get name
+        name = input("Enter victim's full name: ")
+        name = to_title_case(name)
+        if name.lower() == "q" or name.lower() == "quit": return None
+
+        if len(name.split(" ")) != 2:
+            print("Only enter first and last name.")
+            continue
+        
+        # Get date
+        date = input("Enter date of the attack (m/d/y): ")
+
+        if date.lower() == "q" or date.lower() == "quit": return None
+
+        date_digits = date.split("/")
+        if len(list(filter(lambda element: element.isdigit(), date_digits))) != 3 or len(date_digits) != 3:
+            print("Invalid input.")
+            continue
+        
+        date_digits = [int(x) for x in date_digits]
+        if date_digits[0] not in range(1, 13) or date_digits[1] not in range(1, 32) or len(str(date_digits[2])) != 4:
+            print("Invalid input.")
+            continue
+        
+        # Get description
+        description = input("Enter a brief description of the event: ")
+
+        if description.lower() == "q" or description.lower() == "quit": return None
+
+        if not description:
+            print("Field cannot be empty.")
+            continue
+        
+        # Prep data
+        firstname, lastname = name.split(" ")
+        date_digits[0] = f"{date_digits[0]:0>2}"
+        date_digits[1] = f"{date_digits[1]:0>2}"
+
+        # Save report
+        with open("colossus_victims/reports.csv", "a", newline="") as file:
+            _ = writer(file)
+            _.writerow([firstname, lastname, f"{date_digits[0]}/{date_digits[1]}/{date_digits[2]}", description])
+        
+        print("Reported successfully.")
+        return None
 
 
 def log_missions(username:str) -> None:

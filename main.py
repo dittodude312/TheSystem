@@ -2,6 +2,8 @@
     Main file for program using system_functions package. Contains functions for accessing system functionality.
 """
 
+# TODO: delete supply and hour request without approving them
+
 try: from dotenv import load_dotenv
 except ModuleNotFoundError:
     print("The System is missing python-dotenv dependency.")
@@ -53,7 +55,7 @@ def game_menu() -> None:
 
 def start_menu(username:str) -> None:
     """
-    Prompts and displays options for normal users and calls corresponding function. Calls admin_panel function if username == admin.
+    Prompts and displays options for normal users and calls corresponding function. Calls admin_menu function if username == admin.
     :param username: Username.
     :type username: str
     :return: None
@@ -71,14 +73,15 @@ def start_menu(username:str) -> None:
               "3 - X-Mans\n" \
               "4 - Supplies\n" \
               "5 - Byclops\n" \
-              "6 - Colosssus Victims\n"
-              "7 - Log Missions\n"
-              "8 - Profile Manager")
+              "6 - Colosssus Victims\n" \
+              "7 - Report Colossus attack\n" \
+              "8 - Log Missions\n" \
+              "9 - Profile Manager")
         if username == "admin":
-            print("9 - Admin Panel\n" \
-                  "10 - Close System")
+            print("10 - Admin Panel\n" \
+                  "11 - Close System")
         else:
-            print("9 - Close System")
+            print("10 - Close System")
         print("*"*30)
 
         return None
@@ -95,14 +98,15 @@ def start_menu(username:str) -> None:
             case "4": system_functions.menuchoices.supplies(username)
             case "5": system_functions.menuchoices.byclops()
             case "6": system_functions.menuchoices.colossus_victims()
-            case "7": system_functions.menuchoices.log_missions(username)
-            case "8": system_functions.menuchoices.profile_manager(username)
-            case "9":
+            case "7": system_functions.menuchoices.colossus_reporting()
+            case "8": system_functions.menuchoices.log_missions(username)
+            case "9": system_functions.menuchoices.profile_manager(username)
+            case "10":
                 if username == "admin":
                     print("Initializing admin panel...")
-                    admin_panel()
+                    admin_menu()
                 else: return None
-            case "10":
+            case "11":
                 if username == "admin": return None
                 else: 
                     print("Invalid input.")
@@ -114,7 +118,7 @@ def start_menu(username:str) -> None:
         prompt()
 
 
-def admin_panel() -> None:
+def admin_menu() -> None:
     """
     Displays actions for admin and calls corresponding function.
     :return: None
@@ -131,14 +135,15 @@ def admin_panel() -> None:
               "2 - Create new user\n" \
               "3 - Subjects Manager\n" \
               "4 - Approve supply requests\n" \
-              "5 - Add test scores\n" \
-              "6 - View logs\n" \
-              "7 - View students\n" \
-              "8 - Approve mission hours\n" \
-              "9 - Update month entries\n" \
-              "10 - Send notifications\n" \
-              "11 - Games\n" \
-              "12 - Exit")
+              "5 - Review Colossus reports\n" \
+              "6 - Add test scores\n" \
+              "7 - View logs\n" \
+              "8 - View students\n" \
+              "9 - Approve mission hours\n" \
+              "10 - Update month entries\n" \
+              "11 - Send notifications\n" \
+              "12 - Games\n" \
+              "13 - Exit")
         print("*"*30)
     
     prompt()
@@ -150,14 +155,15 @@ def admin_panel() -> None:
             case "2": system_functions.admincontrols.new_user()
             case "3": system_functions.subjects.main()
             case "4": system_functions.admincontrols.approve_supply_requests()
-            case "5": system_functions.admincontrols.add_test_scores()
-            case "6": system_functions.admincontrols.userlog()
-            case "7": system_functions.admincontrols.view_students()
-            case "8": system_functions.admincontrols.approve_hours()
-            case "9": system_functions.admincontrols.new_month()
-            case "10": system_functions.admincontrols.send_notif()
-            case "11": game_menu()
-            case "12": return None
+            case "5": system_functions.admincontrols.review_colossus_reports()
+            case "6": system_functions.admincontrols.add_test_scores()
+            case "7": system_functions.admincontrols.userlog()
+            case "8": system_functions.admincontrols.view_students()
+            case "9": system_functions.admincontrols.approve_hours()
+            case "10": system_functions.admincontrols.new_month()
+            case "11": system_functions.admincontrols.send_notif()
+            case "12": game_menu()
+            case "13": return None
             case _:
                 print("Invalid selection.")
                 continue

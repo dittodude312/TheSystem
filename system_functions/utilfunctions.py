@@ -137,23 +137,52 @@ def update_user_month_data(username:str) -> None:
         _ = reader(file)
         for entry in _:
             if entry[3] == username: first_name = entry[0]
-
-    # Get mission count and hour data for current month
-    month = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}[start_time.month]
-    with open(f"x_mans_files/mission_logs/{start_time.year}logs/xmans{month}{start_time.year}.csv", "r") as file:
-        _ = reader(file)
-        for line in _: 
-            if line[0] == first_name: hour_data = line
     
-    # Update profile file
+    # Fetch old profile data
     with open(f"x_mans_files/profiles/{username}.json", "r") as file:
         user_data = load(file)
 
-    user_data["Monthly Hours"] = int(hour_data[4])
-    user_data["Monthly Mission Count"] = int(hour_data[3])
+    # Fetch mission count and hour data for current month
+    month = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}[start_time.month]
+    
+    try:
+        with open(f"x_mans_files/mission_logs/{start_time.year}logs/xmans{month}{start_time.year}.csv", "r") as file:
+            _ = reader(file)
+            for line in _: 
+                if line[0] == first_name: hour_data = line
+    # Update profile file
+    except FileNotFoundError:
+        user_data["Monthly Hours"] = 0
+        user_data["Monthly Mission Count"] = 0
+    else:
+        user_data["Monthly Hours"] = int(hour_data[4])
+        user_data["Monthly Mission Count"] = int(hour_data[3])
 
     with open(f"x_mans_files/profiles/{username}.json", "w") as file:
         dump(user_data, file)
+
+
+def date_is_later(a:str, b:str) -> bool:
+    """
+    Operates on dates in m/d/y format. Returns True if a is a later date than b, False if not.
+    :param a: First date.
+    :type a: str
+    :param b: Second date.
+    :type b: str
+    :return: Boolean of whether a is a later date than b.
+    :rtype: bool
+    """
+    a_digits = [int(x) for x in a.split("/")]
+    b_digits = [int(x) for x in b.split("/")]
+
+    if a_digits[2] > b_digits[2]: return True
+
+    if a_digits[0] > b_digits[0]: return True
+
+    if a_digits[0] == b_digits[0]:
+        return True if a_digits[1] > b_digits[1] else False
+    
+    return False
 
 
 if __name__ == "__main__":

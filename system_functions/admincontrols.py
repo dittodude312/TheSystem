@@ -839,5 +839,151 @@ def send_notif() -> None:
         prompt()
 
 
+def review_colossus_reports() -> None:
+    """
+    Allows for reviewing or clearing reports of Colossus attacks and adding to victims list.
+    :return: None
+    :rtype: None
+    """
+    def prompt() -> None:
+        """
+        Displays action options for user.
+        :return: None
+        :rtype: None
+        """
+        print("*"*30)
+        print("1 - View reports\n"
+              "2 - Add to victims list\n"
+              "3 - Clear Reports\n"
+              "4 - Exit")
+        print("*"*30)
+    
+    
+    def view_reports() -> None:
+        """
+        Displays report data from reports.csv.
+        :return: None
+        :rtype: None
+        """
+        with open("colossus_victims/reports.csv", "r") as file:
+            contents = []
+            _ = reader(file)
+            for line in _: contents.append(line)
+        contents.remove(contents[0])
+        
+        print()
+        print("First Name     |Last Name      |Date       |Description")
+        print("---------------+---------------+-----------+-------------------------------------")
+        for line in contents: print(f"{line[0]:15}|{line[1]:15}|{line[2]} | {line[3]}")
+        print("---------------+---------------+-----------+-------------------------------------")
+        input("PRESS ENTER TO CONTINUE ")
+    
+
+    def add_victim() -> None:
+        """
+        Allows for adding victim to victims.csv file.
+        :return: None
+        :rtype: None
+        """
+        while True:
+            # Get name
+            firstname = input("Enter victim's first name: ").capitalize()
+            if firstname.lower() == "q" or firstname.lower() == "quit": return None
+            lastname = input("Enter victim's last name: ").capitalize()
+            if lastname.lower() == "q" or lastname.lower() == "quit": return None
+            if not firstname or not lastname:
+                print("Neither fields can be empty.")
+                continue
+            
+            # Get date
+            date = input("Enter date of the attack (m/d/y): ")
+
+            if date.lower() == "q" or date.lower() == "quit": return None
+
+            date_digits = date.split("/")
+            if len(list(filter(lambda element: element.isdigit(), date_digits))) != 3 or len(date_digits) != 3:
+                print("Invalid input.")
+                continue
+            
+            date_digits = [int(x) for x in date_digits]
+            if date_digits[0] not in range(1, 13) or date_digits[1] not in range(1, 32) or len(str(date_digits[2])) != 4:
+                print("Invalid input.")
+                continue
+            
+            # Get description
+            description = input("Enter description of the event: ")
+            if description.lower() == "q" or description.lower() == "quit": return None
+
+            if not description:
+                print("Field cannot be empty.")
+                continue
+            
+            # Make entry
+            date_digits[0] = f"{date_digits[0]:0>2}"
+            date_digits[1] = f"{date_digits[1]:0>2}"
+            entry = [firstname, lastname, f"{date_digits[0]}/{date_digits[1]}/{date_digits[2]}", description]
+
+            # Fetch existing data
+            with open("colossus_victims/victims.csv", "r") as file:
+                contents = []
+                _ = reader(file)
+                for line in _: contents.append(line)
+                contents.remove(contents[0])
+
+            # Add entry to contents such that the contents remain in chronological order
+            if date_is_later(entry[2], contents[len(contents) - 1][2]):
+                contents.append(entry)
+            else:
+                for line in contents:
+                    if date_is_later(entry[2], line[2]): continue
+                    else:
+                        contents.insert(contents.index(line), entry)
+                        break
+            
+            # Save data
+            contents.insert(0, ["FirstName", "LastName", "DateAttacked", "Description"])
+
+            with open("colossus_victims/victims.csv", "w", newline="") as file:
+                _ = writer(file)
+                _.writerows(contents)
+
+            print("Attack logged successfully.")
+            return None
+    
+
+    def clear_reports() -> None:
+        """
+        Allows for clearing report data from reports.csv.
+        :return: None
+        :rtype: None
+        """
+        confirm = input("Are you sure you want to clear all Colossus reports: ")
+
+        if confirm.lower() == "y" or confirm.lower() == "yes":
+            with open("colossus_victims/reports.csv", "w", newline="") as file:
+                _ = writer(file)
+                _.writerow(["FirstName", "LastName", "DateAttacked", "Description"])
+            print("Reports cleared successfully.")
+        else: return None
+
+    prompt()
+    while True:
+        selection = input("Enter your selection: ")
+        match selection:
+            case "1":
+                view_reports()
+            case "2":
+                add_victim()           
+            case "3":
+                clear_reports()
+            case "4":
+                return None
+            case _:
+                print("Invalid input.")
+                continue
+        print()
+        prompt()
+
+
 if __name__ == "__main__":
     print("Running admincontrols.py")
